@@ -1,1 +1,100 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Play Space Invader!</title>
+  <script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+<script>
+kaboom({
+    global: true,
+    width: 800,
+    height: 600,
+    scale: 1,
+    background: [0, 0, 20],
+});
+
+// Load a built-in sprite (simple block as player)
+loadSprite("player", "https://i.imgur.com/Wb1qfhK.png");
+loadSprite("bullet", "https://i.imgur.com/T5qg8qd.png");
+loadSprite("enemy", "https://i.imgur.com/Rx4xOdh.png");
+
+// Player setup
+const player = add([
+    sprite("player"),
+    pos(width() / 2, height() - 50),
+    area(),
+    "player"
+]);
+
+// Bullet group
+const bullets = []
+
+// Enemy spawn
+loop(1.5, () => {
+    const enemy = add([
+        sprite("enemy"),
+        pos(rand(0, width() - 40), 0),
+        area(),
+        move(DOWN, 100),
+        "enemy"
+    ]);
+});
+
+// Player controls
+onKeyDown("left", () => {
+    player.move(-200, 0);
+});
+onKeyDown("right", () => {
+    player.move(200, 0);
+});
+onKeyPress("space", () => {
+    const bullet = add([
+        sprite("bullet"),
+        pos(player.pos.x + 16, player.pos.y),
+        area(),
+        move(UP, 300),
+        cleanup(),
+        "bullet"
+    ]);
+    bullets.push(bullet);
+});
+
+// Collision
+onCollide("bullet", "enemy", (b, e) => {
+    destroy(b);
+    destroy(e);
+});
+
+// Score (optional)
+let score = 0;
+const scoreLabel = add([
+    text("Score: 0"),
+    pos(10, 10),
+    layer("ui"),
+    {
+        value: score,
+    },
+]);
+
+onCollide("bullet", "enemy", (b, e) => {
+    destroy(b);
+    destroy(e);
+    score++;
+    scoreLabel.text = "Score: " + score;
+});
+</script>
+</body>
+</html>
