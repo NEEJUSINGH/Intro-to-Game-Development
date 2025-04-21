@@ -34,8 +34,8 @@
 
   <script>
     kaboom({
-      width: 1200,
-      height: 800,
+      width: 900,
+      height: 750,
       background: [10, 10, 20],
     });
 
@@ -46,7 +46,7 @@
     const player = add([
   sprite("player"),
   scale(0.24), // 👈 slightly larger
-  pos(width() / 2, height() - 80),
+  pos(width() / 2, height() - 70),
   area(),
   "player",
 ]);
@@ -80,7 +80,7 @@ onKeyDown("right", () => {
 
     const enemy = add([
   sprite("enemy"),
-  scale(0.34), // 👈 scale enemy a bit larger
+  scale(0.40), // 👈 scale enemy a bit larger
   pos(rand(0, width() - 48), 40),
   area(),
   move(RIGHT, ENEMY_SPEED),
