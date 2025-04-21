@@ -55,16 +55,18 @@ onLoad(() => {
   ]);
 
   // 👾 Player movement
-  onKeyDown("left", () => {
-    if (player.pos.x > 0) player.move(-SPEED, 0);
-  });
-  onKeyDown("right", () => {
+  onUpdate(() => {
   const playerRightEdge = player.pos.x + player.width * player.scale.x;
-  if (playerRightEdge < width()) {
+  const playerLeftEdge = player.pos.x;
+
+  if (isKeyDown("left") && playerLeftEdge > 0) {
+    player.move(-SPEED, 0);
+  }
+
+  if (isKeyDown("right") && playerRightEdge < width()) {
     player.move(SPEED, 0);
   }
 });
-
   // 🔫 Shoot bullet
   onKeyPress("space", () => {
     add([
@@ -79,21 +81,22 @@ onLoad(() => {
 
   // 👾 Create enemy grid
   function spawnEnemies() {
-    enemyGroup = [];
+  // Clear old enemy list
+  enemyGroup = [];
 
-    for (let row = 0; row < ENEMY_ROWS; row++) {
-      for (let col = 0; col < ENEMY_COLS; col++) {
-        const enemy = add([
-          sprite("enemy"),
-          scale(0.35),
-          area(),
-          pos(80 + col * 80, 40 + row * 60),
-          "enemy",
-        ]);
-        enemyGroup.push(enemy);
-      }
+  for (let row = 0; row < ENEMY_ROWS; row++) {
+    for (let col = 0; col < ENEMY_COLS; col++) {
+      const enemy = add([
+        sprite("enemy"),
+        scale(0.35),
+        area(),
+        pos(80 + col * 80, 40 + row * 60),
+        "enemy",
+      ]);
+      enemyGroup.push(enemy);
     }
   }
+}
 
   spawnEnemies();
 
