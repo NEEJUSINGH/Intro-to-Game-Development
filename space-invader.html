@@ -9,7 +9,6 @@
     body {
       margin: 0;
       background-color: transparent;
-      font-family: 'Comic Sans MS', sans-serif;
     }
     canvas {
       display: block;
@@ -35,96 +34,88 @@ loadSprite("bullet", "bullet.png");
 loadSprite("enemy", "enemy.png");
 
 const SPEED = 320;
-const BULLET_SPEED = 300;
-const ENEMY_SPEED = 40;
-const PLAYER_SCALE = 0.15;
+const BULLET_SPEED = 400;
+const ENEMY_SPEED = 20;
+const ENEMY_ROWS = 3;
+const ENEMY_COLS = 6;
 
-let enemies = [];
 let direction = 1;
+let enemyGroup = [];
 
-// Wait for all sprites
+// After all sprites are loaded
 onLoad(() => {
-  // ✅ Add player AFTER sprite fully loads
+
+  // 👾 Add Player
   const player = add([
     sprite("player"),
-    scale(PLAYER_SCALE),
-    pos(width() / 2, height() - 64 * PLAYER_SCALE - 8), // assuming 64px sprite
+    scale(0.15),
     area(),
+    pos(center().x, height() - 60), // 👈 this ensures full player shows
     "player",
   ]);
 
-  // ✅ Player movement
+  // 👾 Player movement
   onKeyDown("left", () => {
-    if (player.pos.x > 0) {
-      player.move(-SPEED, 0);
-    }
+    if (player.pos.x > 0) player.move(-SPEED, 0);
   });
-
   onKeyDown("right", () => {
-    if (player.pos.x < width() - player.width * player.scale.x) {
-      player.move(SPEED, 0);
-    }
+    if (player.pos.x < width()) player.move(SPEED, 0);
   });
 
-  // ✅ Shoot bullet
+  // 🔫 Shoot bullet
   onKeyPress("space", () => {
     add([
       sprite("bullet"),
       scale(0.5),
-      pos(player.pos.x + (player.width * player.scale.x) / 2 - 4, player.pos.y),
+      pos(player.pos.x + 10, player.pos.y),
       move(UP, BULLET_SPEED),
       area(),
       "bullet",
     ]);
   });
 
-  // 👾 Function to spawn enemy grid
+  // 👾 Create enemy grid
   function spawnEnemies() {
-    enemies = [];
-    const ROWS = 3;
-    const COLS = 6;
-    const SPACING_X = 80;
-    const SPACING_Y = 60;
-    const START_X = 80;
-    const START_Y = 50;
+    enemyGroup = [];
 
-    for (let row = 0; row < ROWS; row++) {
-      for (let col = 0; col < COLS; col++) {
-        const e = add([
+    for (let row = 0; row < ENEMY_ROWS; row++) {
+      for (let col = 0; col < ENEMY_COLS; col++) {
+        const enemy = add([
           sprite("enemy"),
           scale(0.35),
-          pos(START_X + col * SPACING_X, START_Y + row * SPACING_Y),
           area(),
+          pos(80 + col * 80, 40 + row * 60),
           "enemy",
         ]);
-        enemies.push(e);
+        enemyGroup.push(enemy);
       }
     }
   }
 
   spawnEnemies();
 
-  // 👾 Bounce enemies as a group
+  // 👾 Group movement + bounce
   onUpdate(() => {
     let bounce = false;
-    for (const e of enemies) {
-      if (!e.exists()) continue;
-      e.move(direction * ENEMY_SPEED, 0);
-      if (e.pos.x <= 0 || e.pos.x >= width() - 40) bounce = true;
-    }
-    if (bounce) {
-      direction *= -1;
-      for (const e of enemies) {
-        if (e.exists()) e.pos.y += 20;
+
+    for (const enemy of enemyGroup) {
+      if (!enemy.exists()) continue;
+      enemy.move(direction * ENEMY_SPEED, 0);
+      if (enemy.pos.x <= 0 || enemy.pos.x >= width() - 40) {
+        bounce = true;
       }
     }
 
-    // Respawn if all enemies destroyed
-    const alive = enemies.filter(e => e.exists());
-    if (alive.length === 0) {
-      wait(1, () => {
-        spawnEnemies();
-      });
+    if (bounce) {
+      direction *= -1;
+      for (const enemy of enemyGroup) {
+        if (enemy.exists()) enemy.pos.y += 20;
+      }
+    }
+
+    // 💫 Respawn when all dead
+    if (enemyGroup.every(e => !e.exists())) {
+      wait(1, () => spawnEnemies());
     }
   });
 
