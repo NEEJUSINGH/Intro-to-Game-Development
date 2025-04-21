@@ -10,8 +10,6 @@
       margin: 0;
       background-color: transparent;
       font-family: 'Comic Sans MS', sans-serif;
-      color: white;
-      text-align: center;
     }
     canvas {
       display: block;
@@ -25,106 +23,118 @@
 <body>
 
 <script>
-  kaboom({
-    width: 700,
-    height: 500,
-    background: [10, 10, 20],
+kaboom({
+  width: 700,
+  height: 500,
+  background: [10, 10, 20],
+});
+
+// Load assets
+loadSprite("player", "player.png");
+loadSprite("bullet", "bullet.png");
+loadSprite("enemy", "enemy.png");
+
+const SPEED = 320;
+const BULLET_SPEED = 300;
+const ENEMY_SPEED = 40;
+const PLAYER_SCALE = 0.15;
+
+let enemies = [];
+let direction = 1;
+
+// Wait for all sprites
+onLoad(() => {
+  // ✅ Add player AFTER sprite fully loads
+  const player = add([
+    sprite("player"),
+    scale(PLAYER_SCALE),
+    pos(width() / 2, height() - 64 * PLAYER_SCALE - 8), // assuming 64px sprite
+    area(),
+    "player",
+  ]);
+
+  // ✅ Player movement
+  onKeyDown("left", () => {
+    if (player.pos.x > 0) {
+      player.move(-SPEED, 0);
+    }
   });
 
-  // Load sprites
-  loadSprite("player", "player.png");
-  loadSprite("bullet", "bullet.png");
-  loadSprite("enemy", "enemy.png");
+  onKeyDown("right", () => {
+    if (player.pos.x < width() - player.width * player.scale.x) {
+      player.move(SPEED, 0);
+    }
+  });
 
-  const SPEED = 320;
-  const BULLET_SPEED = 300;
-  const ENEMY_SPEED = 40;
-
-  // Wait until all assets are loaded
-  onLoad(() => {
-    // Player
-    const playerScale = 0.55;
-    const playerHeight = 64 * playerScale; // assuming original sprite height is 64px
-    const player = add([
-      sprite("player"),
-      scale(playerScale),
-      pos(width() / 2, height() - playerHeight - 10),
+  // ✅ Shoot bullet
+  onKeyPress("space", () => {
+    add([
+      sprite("bullet"),
+      scale(0.5),
+      pos(player.pos.x + (player.width * player.scale.x) / 2 - 4, player.pos.y),
+      move(UP, BULLET_SPEED),
       area(),
-      "player",
+      "bullet",
     ]);
+  });
 
-    // Player movement
-    onKeyDown("left", () => {
-      if (player.pos.x > 0) {
-        player.move(-SPEED, 0);
-      }
-    });
-
-    onKeyDown("right", () => {
-      if (player.pos.x < width() - player.width * player.scale.x) {
-        player.move(SPEED, 0);
-      }
-    });
-
-    // Shoot bullet
-    onKeyPress("space", () => {
-      add([
-        sprite("bullet"),
-        scale(0.5),
-        pos(player.pos.x + (player.width * player.scale.x) / 2 - 4, player.pos.y),
-        move(UP, BULLET_SPEED),
-        area(),
-        "bullet",
-      ]);
-    });
-
-    // Enemy grid setup
-    const ENEMY_ROWS = 3;
-    const ENEMY_COLS = 6;
-    const ENEMY_SPACING_X = 80;
-    const ENEMY_SPACING_Y = 60;
+  // 👾 Function to spawn enemy grid
+  function spawnEnemies() {
+    enemies = [];
+    const ROWS = 3;
+    const COLS = 6;
+    const SPACING_X = 80;
+    const SPACING_Y = 60;
     const START_X = 80;
     const START_Y = 50;
 
-    let direction = 1; // right = 1, left = -1
-    const enemies = [];
-
-    for (let row = 0; row < ENEMY_ROWS; row++) {
-      for (let col = 0; col < ENEMY_COLS; col++) {
-        const enemy = add([
+    for (let row = 0; row < ROWS; row++) {
+      for (let col = 0; col < COLS; col++) {
+        const e = add([
           sprite("enemy"),
           scale(0.35),
-          pos(START_X + col * ENEMY_SPACING_X, START_Y + row * ENEMY_SPACING_Y),
+          pos(START_X + col * SPACING_X, START_Y + row * SPACING_Y),
           area(),
           "enemy",
         ]);
-        enemies.push(enemy);
+        enemies.push(e);
+      }
+    }
+  }
+
+  spawnEnemies();
+
+  // 👾 Bounce enemies as a group
+  onUpdate(() => {
+    let bounce = false;
+    for (const e of enemies) {
+      if (!e.exists()) continue;
+      e.move(direction * ENEMY_SPEED, 0);
+      if (e.pos.x <= 0 || e.pos.x >= width() - 40) bounce = true;
+    }
+    if (bounce) {
+      direction *= -1;
+      for (const e of enemies) {
+        if (e.exists()) e.pos.y += 20;
       }
     }
 
-    // Bounce all enemies together
-    onUpdate(() => {
-      let bounce = false;
-      for (const e of enemies) {
-        if (!e.exists()) continue;
-        e.move(direction * ENEMY_SPEED, 0);
-        if (e.pos.x <= 0 || e.pos.x >= width() - 40) bounce = true;
-      }
-      if (bounce) {
-        direction *= -1;
-        for (const e of enemies) {
-          if (e.exists()) e.pos.y += 20;
-        }
-      }
-    });
-
-    // Bullet and enemy collision
-    onCollide("bullet", "enemy", (b, e) => {
-      destroy(b);
-      destroy(e);
-      addKaboom(e.pos);
-    });
+    // Respawn if all enemies destroyed
+    const alive = enemies.filter(e => e.exists());
+    if (alive.length === 0) {
+      wait(1, () => {
+        spawnEnemies();
+      });
+    }
   });
+
+  // 💥 Destroy on hit
+  onCollide("bullet", "enemy", (b, e) => {
+    destroy(b);
+    destroy(e);
+    addKaboom(e.pos);
+  });
+});
 </script>
 
 </body>
