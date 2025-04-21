@@ -55,16 +55,15 @@ onLoad(() => {
   ]);
 
   // 👾 Player movement
-  onUpdate(() => {
-  const playerRightEdge = player.pos.x + player.width * player.scale.x;
-  const playerLeftEdge = player.pos.x;
-
-  if (isKeyDown("left") && playerLeftEdge > 0) {
-    player.move(-SPEED, 0);
+  onKeyDown("left", () => {
+  if (player.pos.x > 0) {
+    player.move(-SPEED * dt(), 0);
   }
+});
 
-  if (isKeyDown("right") && playerRightEdge < width()) {
-    player.move(SPEED, 0);
+onKeyDown("right", () => {
+  if (player.pos.x + player.width * player.scale.x < width()) {
+    player.move(SPEED * dt(), 0);
   }
 });
   // 🔫 Shoot bullet
@@ -126,9 +125,12 @@ onLoad(() => {
 
   // Respawn enemies if all destroyed
   if (enemyGroup.every(e => !e.exists())) {
-    wait(1, () => spawnEnemies());
-  }
-});
+  wait(1, () => {
+    enemyGroup.forEach(e => destroy(e));
+    enemyGroup = [];
+    spawnEnemies();
+  });
+}
   
   // 💥 Destroy on hit
   onCollide("bullet", "enemy", (b, e) => {
