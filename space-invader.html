@@ -36,66 +36,64 @@
       scale: 1,
     });
 
-    // Load local sprites from your GitHub Pages repo
+    // Load local sprites from GitHub Pages repo
     loadSprite("player", "player.png");
     loadSprite("bullet", "bullet.png");
     loadSprite("enemy", "enemy.png");
 
-    // Wait for assets to load before starting the scene
-    onLoad(() => {
-      const player = add([
-        sprite("player"),
-        pos(width() / 2, height() - 80),
+    // 👇 Run everything directly
+    const player = add([
+      sprite("player"),
+      pos(width() / 2, height() - 80),
+      area(),
+      "player",
+    ]);
+
+    const SPEED = 320;
+    const BULLET_SPEED = 400;
+    const ENEMY_SPEED = 60;
+
+    // Player movement
+    onKeyDown("left", () => {
+      player.move(-SPEED, 0);
+    });
+
+    onKeyDown("right", () => {
+      player.move(SPEED, 0);
+    });
+
+    // Shoot bullet
+    onKeyPress("space", () => {
+      add([
+        sprite("bullet"),
+        pos(player.pos.x + 20, player.pos.y),
+        move(UP, BULLET_SPEED),
         area(),
-        "player",
+        "bullet",
       ]);
+    });
 
-      const SPEED = 320;
-      const BULLET_SPEED = 400;
-      const ENEMY_SPEED = 60;
+    // Add one enemy at the top
+    const enemy = add([
+      sprite("enemy"),
+      pos(rand(0, width() - 48), 40),
+      area(),
+      move(RIGHT, ENEMY_SPEED),
+      "enemy",
+    ]);
 
-      // Player movement
-      onKeyDown("left", () => {
-        player.move(-SPEED, 0);
-      });
+    // Bounce enemy off walls
+    enemy.onUpdate(() => {
+      if (enemy.pos.x <= 0 || enemy.pos.x >= width() - 48) {
+        enemy.move(-enemy.moveSpeed * 2, 0);
+      }
+    });
 
-      onKeyDown("right", () => {
-        player.move(SPEED, 0);
-      });
-
-      // Shoot bullet
-      onKeyPress("space", () => {
-        add([
-          sprite("bullet"),
-          pos(player.pos.x + 20, player.pos.y),
-          move(UP, BULLET_SPEED),
-          area(),
-          "bullet",
-        ]);
-      });
-
-      // Add one enemy at the top for now
-      const enemy = add([
-        sprite("enemy"),
-        pos(rand(0, width() - 48), 40),
-        area(),
-        move(RIGHT, ENEMY_SPEED),
-        "enemy",
-      ]);
-
-      // Bounce enemy off walls
-      enemy.onUpdate(() => {
-        if (enemy.pos.x <= 0 || enemy.pos.x >= width() - 48) {
-          enemy.move(-enemy.moveSpeed * 2, 0);
-        }
-      });
-
-      // Collision detection
-      onCollide("bullet", "enemy", (b, e) => {
-        destroy(b);
-        destroy(e);
-        addKaboom(e.pos);
-      });
+    // Collision detection
+    onCollide("bullet", "enemy", (b, e) => {
+      destroy(b);
+      destroy(e);
+      addKaboom(e.pos);
     });
   </script>
 </body>
