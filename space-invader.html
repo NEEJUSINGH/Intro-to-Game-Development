@@ -34,8 +34,8 @@
 
   <script>
     kaboom({
-      width: 900,
-      height: 900,
+      width: 1200,
+      height: 800,
       background: [10, 10, 20],
     });
 
@@ -66,7 +66,7 @@
     onKeyPress("space", () => {
   add([
     sprite("bullet"),
-    scale(0.2), // 👈 make bullet more visible
+    scale(0.5), // 👈 make bullet more visible
     pos(player.pos.x + 20, player.pos.y),
     move(UP, BULLET_SPEED),
     area(),
