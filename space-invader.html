@@ -1,108 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Space Invader – Kaboom Version</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Space Invader Mini Game</title>
+  <script src="https://unpkg.com/kaboom@3000.0.0-beta.10/dist/kaboom.js"></script>
   <style>
     body {
       margin: 0;
-      background: #001020;
-      font-family: "Comic Sans MS", sans-serif;
+      background-color: #0d1117;
+      font-family: 'Comic Sans MS', sans-serif;
       color: white;
       text-align: center;
     }
-    #game-container {
-      display: flex;
-      justify-content: center;
-      padding: 20px;
+    h1 {
+      margin-top: 20px;
+    }
+    #instructions {
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
   <h1>👾 Space Invader Mini Game</h1>
-  <p>
-    Use <strong>⬅️ ➡️ arrow keys</strong> to move your spaceship <br />
+  <p id="instructions">
+    Use ⬅️ ➡️ <strong>arrow keys</strong> to move your spaceship<br/>
     Press <strong>spacebar</strong> to shoot your laser!
   </p>
 
-  <div id="game-container"></div>
-
-  <!-- Kaboom.js -->
-  <script src="https://unpkg.com/kaboom@next/dist/kaboom.js"></script>
   <script>
     kaboom({
-      global: true,
-      fullscreen: false,
+      background: [10, 10, 20],
       width: 800,
       height: 600,
       scale: 1,
-      debug: true,
-      background: [0, 0, 20],
-      canvas: document.createElement("canvas"),
-      root: document.getElementById("game-container")
     });
 
-    // Load local sprites
-    loadSprite("player", "https://neejusingh.github.io/Intro-to-Game-Development/player.png");
-    loadSprite("bullet", "https://neejusingh.github.io/Intro-to-Game-Development/bullet.png");
-    loadSprite("enemy", "https://neejusingh.github.io/Intro-to-Game-Development/enemy.png");
+    // Load local sprites from your GitHub Pages repo
+    loadSprite("player", "player.png");
+    loadSprite("bullet", "bullet.png");
+    loadSprite("enemy", "enemy.png");
 
-
-    // Add player
-    const player = add([
-      sprite("player"),
-      pos(width() / 2, height() - 60),
-      scale(0.5),
-      area(),
-      "player"
-    ]);
-
-    // Add enemy
-    let enemy = add([
-      sprite("enemy"),
-      pos(rand(0, width() - 48), 50),
-      scale(0.6),
-      area(),
-      "enemy"
-    ]);
-
-    // Bullet speed
-    const BULLET_SPEED = 400;
-
-    // Move player
-    onKeyDown("left", () => {
-      player.move(-200, 0);
-    });
-
-    onKeyDown("right", () => {
-      player.move(200, 0);
-    });
-
-    // Shoot bullet
-    onKeyPress("space", () => {
-      add([
-        sprite("bullet"),
-        pos(player.pos.x + 20, player.pos.y),
-        scale(0.5),
+    // Wait for assets to load before starting the scene
+    onLoad(() => {
+      const player = add([
+        sprite("player"),
+        pos(width() / 2, height() - 80),
         area(),
-        "bullet",
-        move(UP, BULLET_SPEED)
+        "player",
       ]);
-    });
 
-    // Bullet hits enemy
-    onCollide("bullet", "enemy", (b, e) => {
-      destroy(b);
-      destroy(e);
+      const SPEED = 320;
+      const BULLET_SPEED = 400;
+      const ENEMY_SPEED = 60;
 
-      // Respawn enemy
-      enemy = add([
+      // Player movement
+      onKeyDown("left", () => {
+        player.move(-SPEED, 0);
+      });
+
+      onKeyDown("right", () => {
+        player.move(SPEED, 0);
+      });
+
+      // Shoot bullet
+      onKeyPress("space", () => {
+        add([
+          sprite("bullet"),
+          pos(player.pos.x + 20, player.pos.y),
+          move(UP, BULLET_SPEED),
+          area(),
+          "bullet",
+        ]);
+      });
+
+      // Add one enemy at the top for now
+      const enemy = add([
         sprite("enemy"),
-        pos(rand(0, width() - 48), 50),
-        scale(0.6),
+        pos(rand(0, width() - 48), 40),
         area(),
-        "enemy"
+        move(RIGHT, ENEMY_SPEED),
+        "enemy",
       ]);
+
+      // Bounce enemy off walls
+      enemy.onUpdate(() => {
+        if (enemy.pos.x <= 0 || enemy.pos.x >= width() - 48) {
+          enemy.move(-enemy.moveSpeed * 2, 0);
+        }
+      });
+
+      // Collision detection
+      onCollide("bullet", "enemy", (b, e) => {
+        destroy(b);
+        destroy(e);
+        addKaboom(e.pos);
+      });
     });
   </script>
 </body>
