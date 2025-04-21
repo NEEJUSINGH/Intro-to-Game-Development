@@ -1,100 +1,108 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Play Space Invader!</title>
-  <script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+  <meta charset="utf-8" />
+  <title>Space Invader – Kaboom Version</title>
   <style>
     body {
       margin: 0;
-      background: #000;
+      background: #001020;
+      font-family: "Comic Sans MS", sans-serif;
+      color: white;
+      text-align: center;
     }
-    canvas {
-      display: block;
-      margin: 0 auto;
+    #game-container {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
     }
   </style>
 </head>
 <body>
-<script>
-kaboom({
-    global: true,
-    width: 800,
-    height: 600,
-    scale: 1,
-    background: [0, 0, 20],
-});
+  <h1>👾 Space Invader Mini Game</h1>
+  <p>
+    Use <strong>⬅️ ➡️ arrow keys</strong> to move your spaceship <br />
+    Press <strong>spacebar</strong> to shoot your laser!
+  </p>
 
-// Load a built-in sprite (simple block as player)
-loadSprite("player", "player.png");
-loadSprite("bullet", "bullet.png");
-loadSprite("enemy", "enemy.png");
+  <div id="game-container"></div>
 
-// Player setup
-const player = add([
-    sprite("player"),
-    pos(width() / 2, height() - 50),
-    area(),
-    "player"
-]);
+  <!-- Kaboom.js -->
+  <script src="https://unpkg.com/kaboom@next/dist/kaboom.js"></script>
+  <script>
+    kaboom({
+      global: true,
+      fullscreen: false,
+      width: 800,
+      height: 600,
+      scale: 1,
+      debug: true,
+      background: [0, 0, 20],
+      canvas: document.createElement("canvas"),
+      root: document.getElementById("game-container")
+    });
 
-// Bullet group
-const bullets = []
+    // Load local sprites
+    loadSprite("player", "player.png");
+    loadSprite("bullet", "bullet.png");
+    loadSprite("enemy", "enemy.png");
 
-// Enemy spawn
-loop(1.5, () => {
-    const enemy = add([
-        sprite("enemy"),
-        pos(rand(0, width() - 40), 0),
-        area(),
-        move(DOWN, 100),
-        "enemy"
+    // Add player
+    const player = add([
+      sprite("player"),
+      pos(width() / 2, height() - 60),
+      scale(0.5),
+      area(),
+      "player"
     ]);
-});
 
-// Player controls
-onKeyDown("left", () => {
-    player.move(-200, 0);
-});
-onKeyDown("right", () => {
-    player.move(200, 0);
-});
-onKeyPress("space", () => {
-    const bullet = add([
+    // Add enemy
+    let enemy = add([
+      sprite("enemy"),
+      pos(rand(0, width() - 48), 50),
+      scale(0.6),
+      area(),
+      "enemy"
+    ]);
+
+    // Bullet speed
+    const BULLET_SPEED = 400;
+
+    // Move player
+    onKeyDown("left", () => {
+      player.move(-200, 0);
+    });
+
+    onKeyDown("right", () => {
+      player.move(200, 0);
+    });
+
+    // Shoot bullet
+    onKeyPress("space", () => {
+      add([
         sprite("bullet"),
-        pos(player.pos.x + 16, player.pos.y),
+        pos(player.pos.x + 20, player.pos.y),
+        scale(0.5),
         area(),
-        move(UP, 300),
-        cleanup(),
-        "bullet"
-    ]);
-    bullets.push(bullet);
-});
+        "bullet",
+        move(UP, BULLET_SPEED)
+      ]);
+    });
 
-// Collision
-onCollide("bullet", "enemy", (b, e) => {
-    destroy(b);
-    destroy(e);
-});
+    // Bullet hits enemy
+    onCollide("bullet", "enemy", (b, e) => {
+      destroy(b);
+      destroy(e);
 
-// Score (optional)
-let score = 0;
-const scoreLabel = add([
-    text("Score: 0"),
-    pos(10, 10),
-    layer("ui"),
-    {
-        value: score,
-    },
-]);
-
-onCollide("bullet", "enemy", (b, e) => {
-    destroy(b);
-    destroy(e);
-    score++;
-    scoreLabel.text = "Score: " + score;
-});
-</script>
+      // Respawn enemy
+      enemy = add([
+        sprite("enemy"),
+        pos(rand(0, width() - 48), 50),
+        scale(0.6),
+        area(),
+        "enemy"
+      ]);
+    });
+  </script>
 </body>
 </html>
