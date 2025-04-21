@@ -34,8 +34,8 @@
 
   <script>
     kaboom({
-      width: 900,
-      height: 750,
+      width: 700,
+      height: 400,
       background: [10, 10, 20],
     });
 
@@ -46,14 +46,14 @@
     const player = add([
   sprite("player"),
   scale(0.24), // 👈 slightly larger
-  pos(width() / 2, height() - 70),
+  pos(width() / 2, height() - 40),
   area(),
   "player",
 ]);
 
     const SPEED = 320;
-    const BULLET_SPEED = 400;
-    const ENEMY_SPEED = 60;
+    const BULLET_SPEED = 300;
+    const ENEMY_SPEED = 40;
 
     onKeyDown("left", () => {
   if (player.pos.x > 0) {
