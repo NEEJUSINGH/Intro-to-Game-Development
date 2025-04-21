@@ -23,33 +23,37 @@
   </style>
 </head>
 <body>
-  <script>
-    kaboom({
-      width: 700,
-      height: 500,
-      background: [10, 10, 20],
-    });
 
-    loadSprite("player", "player.png");
-    loadSprite("bullet", "bullet.png");
-    loadSprite("enemy", "enemy.png");
+<script>
+  kaboom({
+    width: 700,
+    height: 500,
+    background: [10, 10, 20],
+  });
 
-    // Player setup
+  // Load sprites
+  loadSprite("player", "player.png");
+  loadSprite("bullet", "bullet.png");
+  loadSprite("enemy", "enemy.png");
+
+  const SPEED = 320;
+  const BULLET_SPEED = 300;
+  const ENEMY_SPEED = 40;
+
+  // Wait until all assets are loaded
+  onLoad(() => {
+    // Player
     const playerScale = 0.15;
-    const playerY = 500 - (64 * playerScale) - 10; // assuming 64px tall sprite
+    const playerHeight = 64 * playerScale; // assuming original sprite height is 64px
     const player = add([
       sprite("player"),
       scale(playerScale),
-      pos(width() / 2, playerY),
+      pos(width() / 2, height() - playerHeight - 10),
       area(),
       "player",
     ]);
 
-    const SPEED = 320;
-    const BULLET_SPEED = 300;
-    const ENEMY_SPEED = 60;
-
-    // Movement
+    // Player movement
     onKeyDown("left", () => {
       if (player.pos.x > 0) {
         player.move(-SPEED, 0);
@@ -62,25 +66,28 @@
       }
     });
 
-    // Shooting
+    // Shoot bullet
     onKeyPress("space", () => {
       add([
         sprite("bullet"),
         scale(0.5),
-        pos(player.pos.x + player.width * player.scale.x / 2 - 4, player.pos.y),
+        pos(player.pos.x + (player.width * player.scale.x) / 2 - 4, player.pos.y),
         move(UP, BULLET_SPEED),
         area(),
         "bullet",
       ]);
     });
 
-    // Multiple enemies
+    // Enemy grid setup
     const ENEMY_ROWS = 3;
     const ENEMY_COLS = 6;
     const ENEMY_SPACING_X = 80;
     const ENEMY_SPACING_Y = 60;
     const START_X = 80;
     const START_Y = 50;
+
+    let direction = 1; // right = 1, left = -1
+    const enemies = [];
 
     for (let row = 0; row < ENEMY_ROWS; row++) {
       for (let col = 0; col < ENEMY_COLS; col++) {
@@ -89,24 +96,36 @@
           scale(0.35),
           pos(START_X + col * ENEMY_SPACING_X, START_Y + row * ENEMY_SPACING_Y),
           area(),
-          move(RIGHT, ENEMY_SPEED),
           "enemy",
         ]);
-
-        enemy.onUpdate(() => {
-          if (enemy.pos.x <= 0 || enemy.pos.x >= width() - 40) {
-            enemy.move(-enemy.moveSpeed * 2, 0);
-          }
-        });
+        enemies.push(enemy);
       }
     }
 
-    // Collision
+    // Bounce all enemies together
+    onUpdate(() => {
+      let bounce = false;
+      for (const e of enemies) {
+        if (!e.exists()) continue;
+        e.move(direction * ENEMY_SPEED, 0);
+        if (e.pos.x <= 0 || e.pos.x >= width() - 40) bounce = true;
+      }
+      if (bounce) {
+        direction *= -1;
+        for (const e of enemies) {
+          if (e.exists()) e.pos.y += 20;
+        }
+      }
+    });
+
+    // Bullet and enemy collision
     onCollide("bullet", "enemy", (b, e) => {
       destroy(b);
       destroy(e);
       addKaboom(e.pos);
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>
