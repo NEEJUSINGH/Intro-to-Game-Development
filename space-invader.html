@@ -45,7 +45,7 @@
 
     const player = add([
   sprite("player"),
-  scale(0.22), // 👈 slightly larger
+  scale(0.24), // 👈 slightly larger
   pos(width() / 2, height() - 80),
   area(),
   "player",
@@ -56,12 +56,16 @@
     const ENEMY_SPEED = 60;
 
     onKeyDown("left", () => {
-      player.move(-SPEED, 0);
-    });
+  if (player.pos.x > 0) {
+    player.move(-SPEED, 0);
+  }
+});
 
-    onKeyDown("right", () => {
-      player.move(SPEED, 0);
-    });
+onKeyDown("right", () => {
+  if (player.pos.x < width() - player.width * player.scale.x) {
+    player.move(SPEED, 0);
+  }
+});
 
     onKeyPress("space", () => {
   add([
@@ -76,7 +80,7 @@
 
     const enemy = add([
   sprite("enemy"),
-  scale(0.3), // 👈 scale enemy a bit larger
+  scale(0.34), // 👈 scale enemy a bit larger
   pos(rand(0, width() - 48), 40),
   area(),
   move(RIGHT, ENEMY_SPEED),
