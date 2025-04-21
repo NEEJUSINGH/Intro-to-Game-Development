@@ -131,14 +131,14 @@ onKeyDown("right", () => {
     spawnEnemies();
   });
 }
-  
+});
   // 💥 Destroy on hit
   onCollide("bullet", "enemy", (b, e) => {
     destroy(b);
     destroy(e);
     addKaboom(e.pos);
   });
-});
+
 </script>
 
 </body>
