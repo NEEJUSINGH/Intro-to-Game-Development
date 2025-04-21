@@ -45,6 +45,7 @@
 
     const player = add([
       sprite("player"),
+      scale(0.2), // ✅ scales down the player image
       pos(width() / 2, height() - 80),
       area(),
       "player",
@@ -65,6 +66,7 @@
     onKeyPress("space", () => {
       add([
         sprite("bullet"),
+        scale(0.1), // ✅ scales down the bullet image
         pos(player.pos.x + 20, player.pos.y),
         move(UP, BULLET_SPEED),
         area(),
@@ -74,6 +76,7 @@
 
     const enemy = add([
       sprite("enemy"),
+      scale(0.2), // ✅ scales down the enemy image
       pos(rand(0, width() - 48), 40),
       area(),
       move(RIGHT, ENEMY_SPEED),
