@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lesson 3 – Think Like a Game Designer</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to bottom, #000428, #004e92);
+      color: white;
+      padding: 30px;
+      line-height: 1.6;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 3em;
+      color: #00eaff;
+    }
+
+    h2 {
+      color: #ffeb3b;
+      margin-top: 40px;
+    }
+
+    p, li {
+      font-size: 1.2em;
+    }
+
+    .tip-box {
+      background-color: #222;
+      border-left: 6px solid #00eaff;
+      padding: 12px 18px;
+      margin: 20px 0;
+      border-radius: 10px;
+    }
+
+    ol {
+      background-color: rgba(255,255,255,0.05);
+      padding: 15px 25px;
+      border-radius: 8px;
+    }
+
+    .nav {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .nav a {
+      background-color: #00eaff;
+      color: #000;
+      text-decoration: none;
+      padding: 12px 24px;
+      font-size: 1.2em;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,255,255,0.6);
+      transition: background-color 0.3s;
+    }
+
+    .nav a:hover {
+      background-color: #00c2d3;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 Lesson 3: Think Like a Game Designer!</h1>
+
+  <div class="tip-box">
+    <strong>Goal:</strong> Break down the Space Invader game into logical steps and understand what an algorithm is.
+  </div>
+
+  <h2>🧩 Can You Break It Down?</h2>
+  <p>What are the main pieces of our game?</p>
+  <ul>
+    <li>🚀 The spaceship (player)</li>
+    <li>🔫 The bullets (fired with spacebar)</li>
+    <li>👾 The enemies (that move and drop down)</li>
+    <li>🎯 The score (that increases when you hit an enemy)</li>
+  </ul>
+
+  <h2>📋 What Are the Steps?</h2>
+  <p>Can you imagine what instructions the game needs to follow to work?</p>
+
+  <div class="tip-box">
+    This is called an <strong>algorithm</strong> — a step-by-step list of what to do!
+  </div>
+
+  <ol>
+    <li>Start the game and show the screen</li>
+    <li>Wait for the player to press keys</li>
+    <li>If the player presses ➡️ or ⬅️, move the spaceship</li>
+    <li>If the player presses spacebar, fire a bullet</li>
+    <li>Move the enemies across the screen</li>
+    <li>Check if any bullet hits an enemy</li>
+    <li>If yes, remove both and increase score</li>
+    <li>If all enemies are gone, start again!</li>
+  </ol>
+
+  <h2>✍️ Try It Yourself!</h2>
+  <p>Can you write your own algorithm for this game in your notebook?</p>
+  <p>Start with “When the game starts…” and think about what happens next.</p>
+
+  <div class="tip-box">
+    💡 Don’t worry about writing code — just use plain words and logical steps!
+  </div>
+
+  <div class="nav">
+    <a href="lesson4.html">➡️ Go to Lesson 4: Start Coding!</a>
+  </div>
+
+</body>
+</html>
