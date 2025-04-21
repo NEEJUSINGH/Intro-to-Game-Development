@@ -59,8 +59,11 @@ onLoad(() => {
     if (player.pos.x > 0) player.move(-SPEED, 0);
   });
   onKeyDown("right", () => {
-    if (player.pos.x < width()) player.move(SPEED, 0);
-  });
+  const playerRightEdge = player.pos.x + player.width * player.scale.x;
+  if (playerRightEdge < width()) {
+    player.move(SPEED, 0);
+  }
+});
 
   // 🔫 Shoot bullet
   onKeyPress("space", () => {
@@ -96,29 +99,34 @@ onLoad(() => {
 
   // 👾 Group movement + bounce
   onUpdate(() => {
-    let bounce = false;
+  let bounce = false;
 
+  for (const enemy of enemyGroup) {
+    if (!enemy.exists()) continue;
+    enemy.move(direction * ENEMY_SPEED, 0);
+    const enemyRightEdge = enemy.pos.x + enemy.width * enemy.scale.x;
+    const enemyLeftEdge = enemy.pos.x;
+    if (enemyLeftEdge <= 0 || enemyRightEdge >= width()) {
+      bounce = true;
+    }
+  }
+
+  // 👉 Move all enemies down together after bounce
+  if (bounce) {
+    direction *= -1;
     for (const enemy of enemyGroup) {
-      if (!enemy.exists()) continue;
-      enemy.move(direction * ENEMY_SPEED, 0);
-      if (enemy.pos.x <= 0 || enemy.pos.x >= width() - 40) {
-        bounce = true;
+      if (enemy.exists()) {
+        enemy.pos.y += 20;
       }
     }
+  }
 
-    if (bounce) {
-      direction *= -1;
-      for (const enemy of enemyGroup) {
-        if (enemy.exists()) enemy.pos.y += 20;
-      }
-    }
-
-    // 💫 Respawn when all dead
-    if (enemyGroup.every(e => !e.exists())) {
-      wait(1, () => spawnEnemies());
-    }
-  });
-
+  // Respawn enemies if all destroyed
+  if (enemyGroup.every(e => !e.exists())) {
+    wait(1, () => spawnEnemies());
+  }
+});
+  
   // 💥 Destroy on hit
   onCollide("bullet", "enemy", (b, e) => {
     destroy(b);
