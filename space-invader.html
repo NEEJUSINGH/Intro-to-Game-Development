@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Space Invader Mini Game</title>
-  <script src="https://unpkg.com/kaboom@next/dist/kaboom.mjs" type="module"></script>
+  <script src="https://unpkg.com/kaboom@2000.2.9/dist/kaboom.js"></script>
   <style>
     body {
       margin: 0;
@@ -19,29 +19,30 @@
     #instructions {
       margin-bottom: 10px;
     }
+    canvas {
+      display: block;
+      margin: auto;
+    }
   </style>
 </head>
 <body>
   <h1>👾 Space Invader Mini Game</h1>
   <p id="instructions">
-    Use ⬅️ ➡️ <strong>arrow keys</strong> to move your spaceship<br/>
-    Press <strong>spacebar</strong> to shoot your laser!
+    Use ⬅️ ➡️ arrow keys to move<br/>
+    Press spacebar to shoot
   </p>
 
-  <script type="module">
-  import kaboom from "https://unpkg.com/kaboom@next/dist/kaboom.mjs";
-  kaboom({
-    width: 800,
-    height: 600,
-    background: [10, 10, 20],
-  });
+  <script>
+    kaboom({
+      width: 800,
+      height: 600,
+      background: [10, 10, 20],
+    });
 
-    // Load local sprites from GitHub Pages repo
     loadSprite("player", "player.png");
     loadSprite("bullet", "bullet.png");
     loadSprite("enemy", "enemy.png");
 
-    // 👇 Run everything directly
     const player = add([
       sprite("player"),
       pos(width() / 2, height() - 80),
@@ -53,7 +54,6 @@
     const BULLET_SPEED = 400;
     const ENEMY_SPEED = 60;
 
-    // Player movement
     onKeyDown("left", () => {
       player.move(-SPEED, 0);
     });
@@ -62,7 +62,6 @@
       player.move(SPEED, 0);
     });
 
-    // Shoot bullet
     onKeyPress("space", () => {
       add([
         sprite("bullet"),
@@ -73,7 +72,6 @@
       ]);
     });
 
-    // Add one enemy at the top
     const enemy = add([
       sprite("enemy"),
       pos(rand(0, width() - 48), 40),
@@ -82,14 +80,12 @@
       "enemy",
     ]);
 
-    // Bounce enemy off walls
     enemy.onUpdate(() => {
       if (enemy.pos.x <= 0 || enemy.pos.x >= width() - 48) {
         enemy.move(-enemy.moveSpeed * 2, 0);
       }
     });
 
-    // Collision detection
     onCollide("bullet", "enemy", (b, e) => {
       destroy(b);
       destroy(e);
