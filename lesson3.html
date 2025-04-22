@@ -164,10 +164,6 @@ resetPBJ();
 </script>
 
   
-  
-
-
-
 <h2>💻 Drag and Drop: Turn On a Computer</h2>
 <p>Put these steps in the correct order by dragging them:</p>
 
@@ -184,6 +180,12 @@ resetPBJ();
     <li draggable="true">Select your user account</li>
     <li draggable="true">Double-click the browser icon</li>
   </ul>
+
+  <div style="margin-top: 20px; text-align: center;">
+    <button onclick="resetPBJ()" style="padding: 8px 16px; margin-right: 10px;">🔁 Reset</button>
+    <button onclick="checkPBJ()" style="padding: 8px 16px;">✅ Check Answer</button>
+    <p id="pbj-feedback" style="margin-top: 15px;"></p>
+  </div>
 </div>
 
 <script>
