@@ -69,6 +69,53 @@
   <div class="tip-box">
     <strong>Goal:</strong> Break down the Space Invader game into logical steps and understand what an algorithm is.
   </div>
+<h2>🥪 Drag and Drop: Make a PB&J Sandwich!</h2>
+<p>Put these steps in the correct order by dragging them:</p>
+
+<div id="pbj-container" style="background: #111; padding: 20px; border-radius: 10px; margin-top: 20px;">
+  <ul id="pbj-steps" style="list-style: none; padding: 0; margin: 0;">
+    <li draggable="true">Put the slices together</li>
+    <li draggable="true">Spread peanut butter on one slice</li>
+    <li draggable="true">Open the peanut butter jar</li>
+    <li draggable="true">Spread jelly on the other slice</li>
+    <li draggable="true">Open the jelly jar</li>
+    <li draggable="true">Get two slices of bread</li>
+    <li draggable="true">Cut sandwich in half</li>
+  </ul>
+</div>
+
+<script>
+// Drag-and-drop logic for PB&J
+const pbjList = document.getElementById("pbj-steps");
+let draggedItem = null;
+
+pbjList.querySelectorAll("li").forEach((item) => {
+  item.style.padding = "12px";
+  item.style.marginBottom = "8px";
+  item.style.background = "#222";
+  item.style.border = "1px solid #555";
+  item.style.borderRadius = "6px";
+  item.style.cursor = "move";
+  item.addEventListener("dragstart", () => {
+    draggedItem = item;
+    setTimeout(() => item.style.display = "none", 0);
+  });
+
+  item.addEventListener("dragend", () => {
+    setTimeout(() => {
+      item.style.display = "block";
+      draggedItem = null;
+    }, 0);
+  });
+
+  item.addEventListener("dragover", (e) => e.preventDefault());
+  item.addEventListener("drop", () => {
+    if (draggedItem && draggedItem !== item) {
+      pbjList.insertBefore(draggedItem, item.nextSibling);
+    }
+  });
+});
+</script>
 
   <h2>🧩 Can You Break It Down?</h2>
   <p>What are the main pieces of our game?</p>
