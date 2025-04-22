@@ -167,33 +167,76 @@ resetPBJ();
 <h2>💻 Drag and Drop: Turn On a Computer</h2>
 <p>Put these steps in the correct order by dragging them:</p>
 
-<div id="computer-container" style="background: #111; padding: 20px; border-radius: 10px; margin-top: 20px; max-width: 600px;">
-  <ul id="computer-steps" style="list-style: none; padding: 0; margin: 0;">
-    <li draggable="true">Start typing or begin your task</li>
-    <li draggable="true">Wait for the browser to open</li>
-    <li draggable="true">Wait for the desktop to fully load</li>
-    <li draggable="true">Type in your password and press Enter</li>
-    <li draggable="true">Plug in the power cable (if needed)</li>
-    <li draggable="true">Click on the address bar or search bar</li>
-    <li draggable="true">Press the power button</li>
-    <li draggable="true">Wait for the screen to light up</li>
-    <li draggable="true">Select your user account</li>
-    <li draggable="true">Double-click the browser icon</li>
-  </ul>
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <div id="computer-container" style="background: #111; padding: 20px; border-radius: 10px; max-width: 600px; width: 100%;">
+    <ul id="computer-steps" style="list-style: none; padding: 0; margin: 0;">
+      <li draggable="true">Start typing or begin your task</li>
+      <li draggable="true">Wait for the browser to open</li>
+      <li draggable="true">Wait for the desktop to fully load</li>
+      <li draggable="true">Type in your password and press Enter</li>
+      <li draggable="true">Plug in the power cable (if needed)</li>
+      <li draggable="true">Click on the address bar or search bar</li>
+      <li draggable="true">Press the power button</li>
+      <li draggable="true">Wait for the screen to light up</li>
+      <li draggable="true">Select your user account</li>
+      <li draggable="true">Double-click the browser icon</li>
+    </ul>
 
-  <div style="margin-top: 20px; text-align: center;">
-    <button onclick="resetPBJ()" style="padding: 8px 16px; margin-right: 10px;">🔁 Reset</button>
-    <button onclick="checkPBJ()" style="padding: 8px 16px;">✅ Check Answer</button>
-    <p id="pbj-feedback" style="margin-top: 15px;"></p>
+    <div style="margin-top: 20px; text-align: center;">
+      <button onclick="resetComputer()" style="padding: 8px 16px; margin-right: 10px;">🔁 Reset</button>
+      <button onclick="checkComputer()" style="padding: 8px 16px;">✅ Check Answer</button>
+      <p id="computer-feedback" style="margin-top: 15px;"></p>
+    </div>
   </div>
 </div>
 
 <script>
-// Drag-and-drop logic for computer steps
+// Style and drag behavior
 const compList = document.getElementById("computer-steps");
-let compDraggedItem = null;
+let draggedComp = null;
 
-compList.querySelectorAll("li").forEach((item) => {
+const correctOrderComputer = [
+  "Plug in the power cable (if needed)",
+  "Press the power button",
+  "Wait for the screen to light up",
+  "Select your user account",
+  "Type in your password and press Enter",
+  "Wait for the desktop to fully load",
+  "Double-click the browser icon",
+  "Wait for the browser to open",
+  "Click on the address bar or search bar",
+  "Start typing or begin your task"
+];
+
+function resetComputer() {
+  compList.innerHTML = "";
+  shuffle([...correctOrderComputer]).forEach(step => {
+    const li = document.createElement("li");
+    li.textContent = step;
+    li.setAttribute("draggable", "true");
+    styleAndEvents(li);
+    compList.appendChild(li);
+  });
+  document.getElementById("computer-feedback").textContent = "";
+}
+
+function checkComputer() {
+  const steps = Array.from(compList.children).map(li => li.textContent.trim());
+  const correct = steps.every((step, index) => step === correctOrderComputer[index]);
+  document.getElementById("computer-feedback").textContent = correct
+    ? "✅ Great job! That’s the right order!"
+    : "❌ Not quite — try again!";
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function styleAndEvents(item) {
   item.style.padding = "12px";
   item.style.marginBottom = "8px";
   item.style.background = "#222";
@@ -202,27 +245,29 @@ compList.querySelectorAll("li").forEach((item) => {
   item.style.cursor = "move";
 
   item.addEventListener("dragstart", () => {
-    compDraggedItem = item;
+    draggedComp = item;
     setTimeout(() => item.style.display = "none", 0);
   });
 
   item.addEventListener("dragend", () => {
     setTimeout(() => {
       item.style.display = "block";
-      compDraggedItem = null;
+      draggedComp = null;
     }, 0);
   });
 
   item.addEventListener("dragover", (e) => e.preventDefault());
 
   item.addEventListener("drop", () => {
-    if (compDraggedItem && compDraggedItem !== item) {
-      compList.insertBefore(compDraggedItem, item.nextSibling);
+    if (draggedComp && draggedComp !== item) {
+      compList.insertBefore(draggedComp, item.nextSibling);
     }
   });
-});
-</script>
+}
 
+// Initialize
+resetComputer();
+</script>
 
   <h2>🧩 Can You Break It Down?</h2>
   <p>What are the main pieces of our game?</p>
