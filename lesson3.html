@@ -72,7 +72,7 @@
 <h2>🥪 Drag and Drop: Make a PB&J Sandwich!</h2>
 <p>Put these steps in the correct order by dragging them:</p>
 
-<div id="pbj-container" style="background: #111; padding: 20px; border-radius: 10px; margin-top: 20px;">
+<div id="pbj-container" style="background: #111; padding: 20px; border-radius: 10px; margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto;">
   <ul id="pbj-steps" style="list-style: none; padding: 0; margin: 0;">
     <li draggable="true">Put the slices together</li>
     <li draggable="true">Spread peanut butter on one slice</li>
@@ -82,40 +82,87 @@
     <li draggable="true">Get two slices of bread</li>
     <li draggable="true">Cut sandwich in half</li>
   </ul>
+
+  <div style="margin-top: 20px; text-align: center;">
+    <button onclick="resetPBJ()" style="padding: 8px 16px; margin-right: 10px;">🔁 Reset</button>
+    <button onclick="checkPBJ()" style="padding: 8px 16px;">✅ Check Answer</button>
+    <p id="pbj-feedback" style="margin-top: 15px;"></p>
+  </div>
 </div>
 
 <script>
-// Drag-and-drop logic for PB&J
-const pbjList = document.getElementById("pbj-steps");
-let draggedItem = null;
+// Original correct order
+const pbjCorrect = [
+  "Get two slices of bread",
+  "Open the peanut butter jar",
+  "Spread peanut butter on one slice",
+  "Open the jelly jar",
+  "Spread jelly on the other slice",
+  "Put the slices together",
+  "Cut sandwich in half"
+];
 
-pbjList.querySelectorAll("li").forEach((item) => {
-  item.style.padding = "12px";
-  item.style.marginBottom = "8px";
-  item.style.background = "#222";
-  item.style.border = "1px solid #555";
-  item.style.borderRadius = "6px";
-  item.style.cursor = "move";
-  item.addEventListener("dragstart", () => {
-    draggedItem = item;
-    setTimeout(() => item.style.display = "none", 0);
+function populatePBJ(steps) {
+  const list = document.getElementById("pbj-steps");
+  list.innerHTML = "";
+  steps.forEach(text => {
+    const li = document.createElement("li");
+    li.textContent = text;
+    li.setAttribute("draggable", true);
+    li.style.padding = "12px";
+    li.style.marginBottom = "8px";
+    li.style.background = "#222";
+    li.style.border = "1px solid #555";
+    li.style.borderRadius = "6px";
+    li.style.cursor = "move";
+    list.appendChild(li);
   });
+  enablePBJDrag();
+}
 
-  item.addEventListener("dragend", () => {
-    setTimeout(() => {
-      item.style.display = "block";
-      draggedItem = null;
-    }, 0);
+function enablePBJDrag() {
+  let draggedItem = null;
+  const items = document.querySelectorAll("#pbj-steps li");
+  items.forEach((item) => {
+    item.addEventListener("dragstart", () => {
+      draggedItem = item;
+      setTimeout(() => item.style.display = "none", 0);
+    });
+    item.addEventListener("dragend", () => {
+      setTimeout(() => {
+        item.style.display = "block";
+        draggedItem = null;
+      }, 0);
+    });
+    item.addEventListener("dragover", (e) => e.preventDefault());
+    item.addEventListener("drop", () => {
+      if (draggedItem && draggedItem !== item) {
+        item.parentNode.insertBefore(draggedItem, item.nextSibling);
+      }
+    });
   });
+}
 
-  item.addEventListener("dragover", (e) => e.preventDefault());
-  item.addEventListener("drop", () => {
-    if (draggedItem && draggedItem !== item) {
-      pbjList.insertBefore(draggedItem, item.nextSibling);
-    }
-  });
-});
+function resetPBJ() {
+  const shuffled = [...pbjCorrect].sort(() => 0.5 - Math.random());
+  populatePBJ(shuffled);
+  document.getElementById("pbj-feedback").textContent = "";
+}
+
+function checkPBJ() {
+  const listItems = document.querySelectorAll("#pbj-steps li");
+  const currentOrder = Array.from(listItems).map(li => li.textContent);
+  const correct = currentOrder.every((step, idx) => step === pbjCorrect[idx]);
+
+  const feedback = document.getElementById("pbj-feedback");
+  feedback.textContent = correct ? "✅ Great job! That’s the correct order!" : "❌ Hmm, not quite. Try again!";
+  feedback.style.color = correct ? "#00ff99" : "#ff6666";
+}
+
+// Load shuffled steps initially
+resetPBJ();
 </script>
+
 
   <h2>🧩 Can You Break It Down?</h2>
   <p>What are the main pieces of our game?</p>
