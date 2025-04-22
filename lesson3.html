@@ -163,6 +163,94 @@ function checkPBJ() {
 resetPBJ();
 </script>
 
+  <h2>📱 Drag and Drop: How to Post a TikTok!</h2>
+<p>Put these steps in the correct order (from opening the app to posting your video):</p>
+
+<div id="tiktok-container" style="background: #111; padding: 20px; border-radius: 10px; margin-top: 20px; max-width: 700px; margin-left: auto; margin-right: auto;">
+  <ul id="tiktok-steps" style="list-style: none; padding: 0; margin: 0;"></ul>
+
+  <div style="margin-top: 20px; text-align: center;">
+    <button onclick="resetTikTok()" style="padding: 8px 16px; margin-right: 10px;">🔁 Reset</button>
+    <button onclick="checkTikTok()" style="padding: 8px 16px;">✅ Check Answer</button>
+    <p id="tiktok-feedback" style="margin-top: 15px;"></p>
+  </div>
+</div>
+
+<script>
+// Correct order
+const tiktokCorrect = [
+  "Open the TikTok app",
+  "Tap the '+' button to create",
+  "Choose a song or sound (optional)",
+  "Record your video",
+  "Preview the video",
+  "Add text, filters, or effects",
+  "Write a caption",
+  "Add hashtags (optional)",
+  "Choose who can see it (private/public)",
+  "Tap 'Post'"
+];
+
+function populateTikTok(steps) {
+  const list = document.getElementById("tiktok-steps");
+  list.innerHTML = "";
+  steps.forEach(text => {
+    const li = document.createElement("li");
+    li.textContent = text;
+    li.setAttribute("draggable", true);
+    li.style.padding = "12px";
+    li.style.marginBottom = "8px";
+    li.style.background = "#222";
+    li.style.border = "1px solid #555";
+    li.style.borderRadius = "6px";
+    li.style.cursor = "move";
+    list.appendChild(li);
+  });
+  enableTikTokDrag();
+}
+
+function enableTikTokDrag() {
+  let draggedItem = null;
+  const items = document.querySelectorAll("#tiktok-steps li");
+  items.forEach((item) => {
+    item.addEventListener("dragstart", () => {
+      draggedItem = item;
+      setTimeout(() => item.style.display = "none", 0);
+    });
+    item.addEventListener("dragend", () => {
+      setTimeout(() => {
+        item.style.display = "block";
+        draggedItem = null;
+      }, 0);
+    });
+    item.addEventListener("dragover", (e) => e.preventDefault());
+    item.addEventListener("drop", () => {
+      if (draggedItem && draggedItem !== item) {
+        item.parentNode.insertBefore(draggedItem, item.nextSibling);
+      }
+    });
+  });
+}
+
+function resetTikTok() {
+  const shuffled = [...tiktokCorrect].sort(() => 0.5 - Math.random());
+  populateTikTok(shuffled);
+  document.getElementById("tiktok-feedback").textContent = "";
+}
+
+function checkTikTok() {
+  const listItems = document.querySelectorAll("#tiktok-steps li");
+  const currentOrder = Array.from(listItems).map(li => li.textContent);
+  const correct = currentOrder.every((step, idx) => step === tiktokCorrect[idx]);
+
+  const feedback = document.getElementById("tiktok-feedback");
+  feedback.textContent = correct ? "🎉 Nailed it! You're a TikTok pro!" : "🚫 Not quite — try again!";
+  feedback.style.color = correct ? "#00ff99" : "#ff6666";
+}
+
+// Load TikTok shuffled steps initially
+resetTikTok();
+</script>
 
   <h2>🧩 Can You Break It Down?</h2>
   <p>What are the main pieces of our game?</p>
