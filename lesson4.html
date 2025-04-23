@@ -56,11 +56,11 @@
 </head>
 <body>
 
-  <h1>🧱 Lesson 4: Let’s Start Coding!</h1>
+  <h1>Lesson 4: Let’s Start Coding!</h1>
 
   <p>Now that you've explored the game and thought about the steps, it's time to actually start building your own version of Space Invader!</p>
 
-  <h2>👩‍💻 Let’s Set Up Our Game Window</h2>
+  <h2>Let’s Set Up Our Game Window</h2>
   <p>We’ll use Python and Pygame to create a screen where the game will run.</p>
 
   <pre><code>import pygame
@@ -74,13 +74,13 @@ pygame.display.set_caption("Space Invader")
 </code></pre>
 
   <div class="term">
-    <strong>🧠 Key Terms:</strong><br>
+    <strong>Key Terms:</strong><br>
     <strong>pygame.init()</strong> – starts the Pygame engine<br>
     <strong>set_mode()</strong> – creates the game screen<br>
     <strong>set_caption()</strong> – sets the title of the window
   </div>
 
-  <h2>🚀 Add the Player (Spaceship)</h2>
+  <h2>Add the Player (Spaceship)</h2>
   <p>We’ll load the image and place it at the bottom of the screen.</p>
 
   <pre><code># Load the player image
@@ -97,7 +97,7 @@ def draw_player(x, y):
     <strong>screen.blit()</strong> – draws the image on the screen
   </div>
 
-  <h2>🎮 Add Movement</h2>
+  <h2>Add Movement</h2>
   <p>We want the spaceship to move left and right when you press arrow keys.</p>
 
   <pre><code>player_speed = 0
@@ -117,7 +117,7 @@ for event in pygame.event.get():
 player_x += player_speed
 </code></pre>
 
-  <h2>🔫 Fire a Bullet!</h2>
+  <h2>Fire a Bullet!</h2>
   <p>We’ll shoot a bullet when the player presses the spacebar.</p>
 
   <pre><code># Load the bullet image
@@ -140,7 +140,7 @@ if event.type == pygame.KEYDOWN:
             fire_bullet(bullet_x, bullet_y)
 </code></pre>
 
-  <h2>📚 What You Learned Today</h2>
+  <h2>What You Learned Today</h2>
   <ul>
     <li>How to set up a game screen using Python + Pygame</li>
     <li>How to display and move a player character</li>
@@ -148,11 +148,11 @@ if event.type == pygame.KEYDOWN:
     <li>How to structure code with methods and variables</li>
   </ul>
 
-  <h2>🔍 Challenge</h2>
+  <h2>Challenge</h2>
   <p>Can you add some print() statements to debug your code and track when keys are pressed?</p>
 
   <div class="nav">
-    <a href="lesson5.html">🚀 Go to Lesson 5: Finish the Game!</a>
+    <a href="lesson5.html">Go to Lesson 5: Finish the Game!</a>
   </div>
 
 </body>
