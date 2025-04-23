@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lesson 5 – Power Up the Game!</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to bottom, #0d1b2a, #1b263b);
+      color: white;
+      padding: 30px;
+      line-height: 1.6;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 3em;
+      color: #00eaff;
+    }
+
+    h2 {
+      color: #ffeb3b;
+      margin-top: 40px;
+    }
+
+    code {
+      background: #222;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #00ffcc;
+    }
+
+    .tip-box {
+      background-color: #222;
+      border-left: 6px solid #00eaff;
+      padding: 12px 18px;
+      margin: 20px 0;
+      border-radius: 10px;
+    }
+
+    .code-block {
+      background: #111;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      white-space: pre-wrap;
+      font-size: 1em;
+      margin-top: 10px;
+    }
+
+    .nav {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .nav a {
+      background-color: #00eaff;
+      color: #000;
+      text-decoration: none;
+      padding: 12px 24px;
+      font-size: 1.2em;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,255,255,0.6);
+      transition: background-color 0.3s;
+    }
+
+    .nav a:hover {
+      background-color: #00c2d3;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🛠️ Lesson 5: Power Up the Game!</h1>
+
+<div class="tip-box">
+  <strong>In this final step:</strong> You’ll make enemies move, let bullets destroy them, and track your score!
+</div>
+
+<h2>1️⃣ Make Enemies Move and Bounce</h2>
+<p>We want the enemies to move side to side and bounce when they hit the wall.</p>
+
+<div class="code-block">
+let direction = 1;<br>
+onUpdate(() => {<br>
+ enemyGroup.forEach(enemy => {<br>
+  enemy.move(direction * ENEMY_SPEED, 0);<br>
+ });<br><br>
+ // If any enemy hits wall, bounce<br>
+ if (enemyGroup.some(e => e.pos.x <= 0 || e.pos.x + e.width >= width())) {<br>
+  direction *= -1;<br>
+  enemyGroup.forEach(e => e.pos.y += 20);<br>
+ }<br>
+});
+</div>
+
+<h2>2️⃣ Destroy Enemy on Bullet Hit</h2>
+<p>Let’s make bullets destroy enemies and add a kaboom effect.</p>
+
+<div class="code-block">
+onCollide("bullet", "enemy", (bullet, enemy) => {<br>
+ destroy(bullet);<br>
+ destroy(enemy);<br>
+ addKaboom(enemy.pos);<br>
+});
+</div>
+
+<h2>3️⃣ Add a Score Display</h2>
+<p>Show a score at the top and increase it when an enemy is hit.</p>
+
+<div class="code-block">
+let score = 0;<br>
+const scoreLabel = add([<br>
+ text("Score: 0"),<br>
+ pos(20, 20),<br>
+ layer("ui")<br>
+]);<br><br>
+
+onCollide("bullet", "enemy", (b, e) => {<br>
+ destroy(b);<br>
+ destroy(e);<br>
+ addKaboom(e.pos);<br>
+ score++;<br>
+ scoreLabel.text = "Score: " + score;<br>
+});
+</div>
+
+<h2>4️⃣ Win Condition</h2>
+<p>When all enemies are destroyed, show a message!</p>
+
+<div class="code-block">
+onUpdate(() => {<br>
+ if (enemyGroup.every(e => !e.exists())) {<br>
+  add([<br>
+   text("🎉 You Win!", { size: 40 }),<br>
+   pos(width() / 2 - 100, height() / 2),<br>
+  ]);<br>
+ }<br>
+});
+</div>
+
+<h2>📦 Recap of Terms</h2>
+<ul>
+  <li><code>onUpdate()</code> – Runs continuously every frame</li>
+  <li><code>onCollide()</code> – Runs when two things collide</li>
+  <li><code>destroy()</code> – Removes something from the screen</li>
+  <li><code>add()</code> – Adds an object to the screen</li>
+  <li><code>text()</code> – Displays text</li>
+</ul>
+
+<h2>💡 Final Tip</h2>
+<p>Your game doesn’t have to be perfect. What matters is that you understood how to build it step by step — like a game designer!</p>
+
+<div class="tip-box">
+  ✅ <strong>Challenge:</strong> Try changing the number of enemies or the bullet speed!
+</div>
+
+<div class="nav">
+  <a href="index.html">🏁 Back to Start Page</a>
+</div>
+
+</body>
+</html>
