@@ -1,12 +1,12 @@
-# 🌌 Intro to Game Development – Space Invader Project
+# Intro to Game Development – Space Invader Project
 
 Welcome to **Intro to Game Development for Middle & High School Students** — a beginner-friendly coding module designed to make game creation fun and accessible, even if you’ve never coded before!
 
-🎮 **Final Project:** A playable Space Invader-style arcade game, built step by step using Python and JavaScript!
+**Final Project:** A playable Space Invader-style arcade game, built step by step using Python and JavaScript!
 
 ---
 
-## 🚀 What's Inside?
+## What's Inside?
 
 | Lesson | Title                               | What You'll Do                                |
 |--------|-------------------------------------|------------------------------------------------|
@@ -18,14 +18,14 @@ Welcome to **Intro to Game Development for Middle & High School Students** — a
 
 ---
 
-## ✨ Live Module (View as a Website)
+## Live Module (View as a Website)
 
-👉 Click here to view the full module in your browser:  
-📎 **[https://neejusingh.github.io/Intro-to-Game-Development](https://neejusingh.github.io/Intro-to-Game-Development)**
+Click here to view the full module in your browser:  
+ **[https://neejusingh.github.io/Intro-to-Game-Development](https://neejusingh.github.io/Intro-to-Game-Development)**
 
 ---
 
-## 💡 About the Project
+##  About the Project
 
 This module was created by **Neeju Singh** as part of a university independent study and youth conference workshop.  
 It combines **Python basics**, **game logic**, and **creative thinking** — all in a fun, hands-on learning experience.
@@ -34,7 +34,7 @@ No coding background required — just curiosity and imagination!
 
 ---
 
-## 🧰 Tools Used
+## Tools Used
 
 - Python & Pygame
 - Kaboom.js (for browser-based game)
@@ -44,7 +44,7 @@ No coding background required — just curiosity and imagination!
 
 ---
 
-## 📦 Clone & Run Locally
+## Clone & Run Locally
 
 To play and edit the game yourself:
 
