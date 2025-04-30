@@ -2,4 +2,4 @@
 
 
 
-https://neejusingh.github.io/Intro-to-Game-Development/lesson1.html
+https://neejusingh.github.io/Intro-to-Game-Development/index.html
