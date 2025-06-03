@@ -132,7 +132,7 @@ onCollide("bullet", "enemy", (b, e) => {<br>
 onUpdate(() => {<br>
  if (enemyGroup.every(e => !e.exists())) {<br>
   add([<br>
-   text("🎉 You Win!", { size: 40 }),<br>
+   text("You Win!", { size: 40 }),<br>
    pos(width() / 2 - 100, height() / 2),<br>
   ]);<br>
  }<br>
