@@ -1,6 +1,6 @@
 # Intro to Game Development – Space Invader Project
 
-Welcome to **Intro to Game Development for Middle & High School Students** — a beginner-friendly coding module designed to make game creation fun and accessible, even if you’ve never coded before!
+Welcome to Intro to Game Development for Middle & High School Students — a beginner-friendly coding module designed to make game creation fun and accessible, even if you’ve never coded before!
 
 **Final Project:** A playable Space Invader-style arcade game, built step by step using Python and JavaScript!
 
