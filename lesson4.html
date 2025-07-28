@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Lesson 4 – Let’s Start Coding!</title>
+  <meta charset="UTF-8" />
+  <title>Lesson 4 – Set Up Your Game Window</title>
   <style>
     body {
       font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -56,12 +56,12 @@
 </head>
 <body>
 
-  <h1>Lesson 4: Let’s Start Coding!</h1>
+  <h1>🚀 Lesson 4: Set Up Your Game Window</h1>
 
-  <p>Now that you've explored the game and thought about the steps, it's time to actually start building your own version of Space Invader!</p>
+  <p>Let’s start building your own version of the Space Invader game using Python and Pygame!</p>
 
-  <h2>Let’s Set Up Our Game Window</h2>
-  <p>We’ll use Python and Pygame to create a screen where the game will run.</p>
+  <h2>Step 1: Start Pygame and Create a Window</h2>
+  <p>This code sets up your game screen and gives it a title:</p>
 
   <pre><code>import pygame
 
@@ -74,14 +74,14 @@ pygame.display.set_caption("Space Invader")
 </code></pre>
 
   <div class="term">
-    <strong>Key Terms:</strong><br>
-    <strong>pygame.init()</strong> – starts the Pygame engine<br>
-    <strong>set_mode()</strong> – creates the game screen<br>
-    <strong>set_caption()</strong> – sets the title of the window
+    <strong>Quick Tips:</strong><br>
+    <code>pygame.init()</code> – starts the game engine<br>
+    <code>set_mode()</code> – sets the screen size<br>
+    <code>set_caption()</code> – names your game window
   </div>
 
-  <h2>Add the Player (Spaceship)</h2>
-  <p>We’ll load the image and place it at the bottom of the screen.</p>
+  <h2>Step 2: Load Your Player (Spaceship)</h2>
+  <p>You’ll need to download and save <code>player.png</code> in the same folder. Then use this code:</p>
 
   <pre><code># Load the player image
 player_img = pygame.image.load("player.png")
@@ -94,66 +94,18 @@ def draw_player(x, y):
 </code></pre>
 
   <div class="term">
-    <strong>screen.blit()</strong> – draws the image on the screen
+    <strong>blit()</strong> means: draw this image at a position on the screen!
   </div>
 
-  <h2>Add Movement</h2>
-  <p>We want the spaceship to move left and right when you press arrow keys.</p>
-
-  <pre><code>player_speed = 0
-
-# Inside your game loop:
-for event in pygame.event.get():
-    if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_LEFT:
-            player_speed = -0.5
-        if event.key == pygame.K_RIGHT:
-            player_speed = 0.5
-    if event.type == pygame.KEYUP:
-        if event.key in [pygame.K_LEFT, pygame.K_RIGHT]:
-            player_speed = 0
-
-# Update player position
-player_x += player_speed
-</code></pre>
-
-  <h2>Fire a Bullet!</h2>
-  <p>We’ll shoot a bullet when the player presses the spacebar.</p>
-
-  <pre><code># Load the bullet image
-bullet_img = pygame.image.load("bullet.png")
-bullet_x = 0
-bullet_y = player_y
-bullet_speed = 1.5
-bullet_state = "ready"
-
-def fire_bullet(x, y):
-    global bullet_state
-    bullet_state = "fire"
-    screen.blit(bullet_img, (x + 28, y - 20))
-
-# Inside your event loop:
-if event.type == pygame.KEYDOWN:
-    if event.key == pygame.K_SPACE:
-        if bullet_state == "ready":
-            bullet_x = player_x
-            fire_bullet(bullet_x, bullet_y)
-</code></pre>
-
-  <h2>What You Learned Today</h2>
-  <ul>
-    <li>How to set up a game screen using Python + Pygame</li>
-    <li>How to display and move a player character</li>
-    <li>How to shoot a bullet on spacebar press</li>
-    <li>How to structure code with methods and variables</li>
-  </ul>
-
-  <h2>Challenge</h2>
-  <p>Can you add some print() statements to debug your code and track when keys are pressed?</p>
+  <p>That’s it for now! In the next lesson, we’ll learn how to move the spaceship using arrow keys.</p>
 
   <div class="nav">
-    <a href="lesson5.html">Go to Lesson 5: Finish the Game!</a>
+    <a href="lesson5.html">➡️ Go to Lesson 5: Move the Player</a>
   </div>
 
 </body>
 </html>
+
+
+
+
