@@ -1,339 +1,159 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Lesson 3 – Think Like a Game Designer</title>
   <style>
-    body {
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: linear-gradient(to bottom, #000428, #004e92);
-      color: white;
-      padding: 30px;
-      line-height: 1.6;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 3em;
-      color: #00eaff;
-    }
-
-    h2 {
-      color: #ffeb3b;
-      margin-top: 40px;
-    }
-
-    p, li {
-      font-size: 1.2em;
-    }
-
-    .tip-box {
-      background-color: #222;
-      border-left: 6px solid #00eaff;
-      padding: 12px 18px;
-      margin: 20px 0;
-      border-radius: 10px;
-    }
-
-    ol {
-      background-color: rgba(255,255,255,0.05);
-      padding: 15px 25px;
-      border-radius: 8px;
-    }
-
-    .nav {
-      text-align: center;
-      margin-top: 50px;
-    }
-
-    .nav a {
-      background-color: #00eaff;
-      color: #000;
-      text-decoration: none;
-      padding: 12px 24px;
-      font-size: 1.2em;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,255,255,0.6);
-      transition: background-color 0.3s;
-    }
-
-    .nav a:hover {
-      background-color: #00c2d3;
-    }
+    :root{ --bg1:#070b16; --bg2:#0a0f1e; --ink:#e6f0ff; --accent:#00eaff; --good:#78e08f; --bad:#ff7675 }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:var(--ink); background:linear-gradient(to bottom,var(--bg1),var(--bg2));}
+    .wrap{max-width:980px; margin:auto; padding:24px}
+    h1{margin:0 0 8px; font-size:clamp(26px,3.2vw,42px); color:var(--accent); text-align:center}
+    .card{background:#0b1226; border:1px solid #152042; border-radius:14px; padding:16px; margin:0 0 16px}
+    .tip{background:#0e1730; border:1px solid #22356f; border-left:6px solid var(--accent); border-radius:10px; padding:12px 14px; margin:16px 0}
+    ul.task{list-style:none; padding:0; margin:0}
+    ul.task li{padding:12px; margin:8px 0; background:#111a38; border:1px solid #2b3d78; border-radius:8px; cursor:grab}
+    .controls{display:flex; gap:10px; margin-top:12px}
+    .btn{appearance:none; border:1px solid #1a2b59; background:#0b1226; color:var(--ink); padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:700}
+    .btn:hover{filter:brightness(1.15)}
+    textarea{width:100%; min-height:160px; border-radius:10px; border:1px solid #1a2b59; background:#0b1226; color:var(--ink); padding:10px}
+    code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   </style>
 </head>
 <body>
+  <main class="wrap">
+    <h1>Lesson 3: Think Like a Game Designer</h1>
+    <section class="card">
+      <div class="tip"><strong>Goal:</strong> Break the Space Invader game into simple steps (an algorithm).</div>
+      <h2>Drag & Drop: Make a PB&J Sandwich</h2>
+      <ul id="pbj" class="task" aria-label="PB&J steps list"></ul>
+      <div class="controls">
+        <button class="btn" id="pbj-reset">🔁 Reset</button>
+        <button class="btn" id="pbj-check">✅ Check Answer</button>
+        <span id="pbj-feedback"></span>
+      </div>
+    </section>
 
-  <h1>Lesson 3: Think Like a Game Designer!</h1>
+    <section class="card">
+      <h2>Drag & Drop: Turn On a Computer & Search “Space Invader”</h2>
+      <ul id="pc" class="task" aria-label="Turn on computer steps list"></ul>
+      <div class="controls">
+        <button class="btn" id="pc-reset">🔁 Reset</button>
+        <button class="btn" id="pc-check">✅ Check Answer</button>
+        <span id="pc-feedback"></span>
+      </div>
+    </section>
 
-  <div class="tip-box">
-    <strong>Goal:</strong> Break down the Space Invader game into logical steps and understand what an algorithm is.
-  </div>
-<h2>Drag and Drop: Make a PB&J Sandwich!</h2>
-<p>Put these steps in the correct order by dragging them:</p>
+    <section class="card">
+      <h2>Write Your Game Algorithm</h2>
+      <p>What steps will our Space Invader game need?</p>
+      <ul>
+        <li>Show the game screen</li>
+        <li>Move the spaceship with the arrow keys</li>
+        <li>Fire bullets with Space</li>
+        <li>Check if a bullet hits an enemy → add score</li>
+      </ul>
+      <textarea id="algo" placeholder="Type your step‑by‑step plan here..."></textarea>
+      <div class="controls">
+        <button class="btn" id="algo-save">💾 Save as .txt</button>
+        <button class="btn" id="algo-clear">🗑️ Clear</button>
+      </div>
+    </section>
 
-<div id="pbj-container" style="background: #111; padding: 20px; border-radius: 10px; margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto;">
-  <ul id="pbj-steps" style="list-style: none; padding: 0; margin: 0;">
-    <li draggable="true">Put the slices together</li>
-    <li draggable="true">Spread peanut butter on one slice</li>
-    <li draggable="true">Open the peanut butter jar</li>
-    <li draggable="true">Spread jelly on the other slice</li>
-    <li draggable="true">Open the jelly jar</li>
-    <li draggable="true">Get two slices of bread</li>
-    <li draggable="true">Cut sandwich in half</li>
-  </ul>
+    <section class="card" style="text-align:center">
+      <a class="btn" href="lesson4.html">Go to Lesson 4 →</a>
+    </section>
+  </main>
 
-  <div style="margin-top: 20px; text-align: center;">
-    <button onclick="resetPBJ()" style="padding: 8px 16px; margin-right: 10px;">🔁 Reset</button>
-    <button onclick="checkPBJ()" style="padding: 8px 16px;">✅ Check Answer</button>
-    <p id="pbj-feedback" style="margin-top: 15px;"></p>
-  </div>
-</div>
+  <script>
+    // --- PB&J ---
+    const PBJ_CORRECT = [
+      "Get two slices of bread",
+      "Open the peanut butter jar",
+      "Spread peanut butter on one slice",
+      "Open the jelly jar",
+      "Spread jelly on the other slice",
+      "Put the slices together",
+      "Cut sandwich in half"
+    ];
 
-<script>
-// Original correct order
-const pbjCorrect = [
-  "Get two slices of bread",
-  "Open the peanut butter jar",
-  "Spread peanut butter on one slice",
-  "Open the jelly jar",
-  "Spread jelly on the other slice",
-  "Put the slices together",
-  "Cut sandwich in half"
-];
-
-function populatePBJ(steps) {
-  const list = document.getElementById("pbj-steps");
-  list.innerHTML = "";
-  steps.forEach(text => {
-    const li = document.createElement("li");
-    li.textContent = text;
-    li.setAttribute("draggable", true);
-    li.style.padding = "12px";
-    li.style.marginBottom = "8px";
-    li.style.background = "#222";
-    li.style.border = "1px solid #555";
-    li.style.borderRadius = "6px";
-    li.style.cursor = "move";
-    list.appendChild(li);
-  });
-  enablePBJDrag();
-}
-
-function enablePBJDrag() {
-  let draggedItem = null;
-  const items = document.querySelectorAll("#pbj-steps li");
-  items.forEach((item) => {
-    item.addEventListener("dragstart", () => {
-      draggedItem = item;
-      setTimeout(() => item.style.display = "none", 0);
+    const pbjList = document.getElementById('pbj');
+    const pbjFeedback = document.getElementById('pbj-feedback');
+    document.getElementById('pbj-reset').addEventListener('click', () => {
+      pbjFeedback.textContent = '';
+      renderList(pbjList, shuffle([...PBJ_CORRECT]));
     });
-    item.addEventListener("dragend", () => {
-      setTimeout(() => {
-        item.style.display = "block";
-        draggedItem = null;
-      }, 0);
+    document.getElementById('pbj-check').addEventListener('click', () => {
+      checkOrder(pbjList, PBJ_CORRECT, pbjFeedback);
     });
-    item.addEventListener("dragover", (e) => e.preventDefault());
-    item.addEventListener("drop", () => {
-      if (draggedItem && draggedItem !== item) {
-        item.parentNode.insertBefore(draggedItem, item.nextSibling);
-      }
+    // init
+    renderList(pbjList, shuffle([...PBJ_CORRECT]));
+
+    // --- PC --- (fixed final step wording to match prompt)
+    const PC_CORRECT = [
+      "Plug in the power cable (if needed)",
+      "Press the power button",
+      "Wait for the screen to light up",
+      "Select your user account",
+      "Type in your password and press Enter",
+      "Wait for the desktop to fully load",
+      "Double-click the browser icon",
+      "Wait for the browser to open",
+      "Click on the address bar or search bar",
+      "Start typing 'Space Invader' and press Enter"
+    ];
+
+    const pcList = document.getElementById('pc');
+    const pcFeedback = document.getElementById('pc-feedback');
+    document.getElementById('pc-reset').addEventListener('click', () => {
+      pcFeedback.textContent = '';
+      renderList(pcList, shuffle([...PC_CORRECT]));
     });
-  });
-}
+    document.getElementById('pc-check').addEventListener('click', () => {
+      checkOrder(pcList, PC_CORRECT, pcFeedback);
+    });
+    // init
+    renderList(pcList, shuffle([...PC_CORRECT]));
 
-function resetPBJ() {
-  const shuffled = [...pbjCorrect].sort(() => 0.5 - Math.random());
-  populatePBJ(shuffled);
-  document.getElementById("pbj-feedback").textContent = "";
-}
-
-function checkPBJ() {
-  const listItems = document.querySelectorAll("#pbj-steps li");
-  const currentOrder = Array.from(listItems).map(li => li.textContent);
-  const correct = currentOrder.every((step, idx) => step === pbjCorrect[idx]);
-
-  const feedback = document.getElementById("pbj-feedback");
-  feedback.textContent = correct ? "✅ Great job! That’s the correct order!" : "❌ Hmm, not quite. Try again!";
-  feedback.style.color = correct ? "#00ff99" : "#ff6666";
-}
-
-// Load shuffled steps initially
-resetPBJ();
-</script>
-
-  
-<h2>Drag and Drop: Turn On a Computer and search for "Space Invader" on the browser</h2>
-<p>Put these steps in the correct order by dragging them:</p>
-
-<div style="display: flex; justify-content: center; margin-top: 20px;">
-  <div id="computer-container" style="background: #111; padding: 20px; border-radius: 10px; max-width: 600px; width: 100%;">
-    <ul id="computer-steps" style="list-style: none; padding: 0; margin: 0;">
-      <li draggable="true">Start typing "Space Invader" and Press Enter</li>
-      <li draggable="true">Wait for the browser to open</li>
-      <li draggable="true">Wait for the desktop to fully load</li>
-      <li draggable="true">Type in your password and press Enter</li>
-      <li draggable="true">Plug in the power cable (if needed)</li>
-      <li draggable="true">Click on the address bar or search bar</li>
-      <li draggable="true">Press the power button</li>
-      <li draggable="true">Wait for the screen to light up</li>
-      <li draggable="true">Select your user account</li>
-      <li draggable="true">Double-click the browser icon</li>
-    </ul>
-
-    <div style="margin-top: 20px; text-align: center;">
-      <button onclick="resetComputer()" style="padding: 8px 16px; margin-right: 10px;">🔁 Reset</button>
-      <button onclick="checkComputer()" style="padding: 8px 16px;">✅ Check Answer</button>
-      <p id="computer-feedback" style="margin-top: 15px;"></p>
-    </div>
-  </div>
-</div>
-
-<script>
-// Style and drag behavior
-const compList = document.getElementById("computer-steps");
-let draggedComp = null;
-
-const correctOrderComputer = [
-  "Plug in the power cable (if needed)",
-  "Press the power button",
-  "Wait for the screen to light up",
-  "Select your user account",
-  "Type in your password and press Enter",
-  "Wait for the desktop to fully load",
-  "Double-click the browser icon",
-  "Wait for the browser to open",
-  "Click on the address bar or search bar",
-  "Start typing or begin your task"
-];
-
-function resetComputer() {
-  compList.innerHTML = "";
-  shuffle([...correctOrderComputer]).forEach(step => {
-    const li = document.createElement("li");
-    li.textContent = step;
-    li.setAttribute("draggable", "true");
-    styleAndEvents(li);
-    compList.appendChild(li);
-  });
-  document.getElementById("computer-feedback").textContent = "";
-}
-
-function checkComputer() {
-  const steps = Array.from(compList.children).map(li => li.textContent.trim());
-  const correct = steps.every((step, index) => step === correctOrderComputer[index]);
-  document.getElementById("computer-feedback").textContent = correct
-    ? "✅ Great job! That’s the right order!"
-    : "❌ Not quite — try again!";
-}
-
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-function styleAndEvents(item) {
-  item.style.padding = "12px";
-  item.style.marginBottom = "8px";
-  item.style.background = "#222";
-  item.style.border = "1px solid #555";
-  item.style.borderRadius = "6px";
-  item.style.cursor = "move";
-
-  item.addEventListener("dragstart", () => {
-    draggedComp = item;
-    setTimeout(() => item.style.display = "none", 0);
-  });
-
-  item.addEventListener("dragend", () => {
-    setTimeout(() => {
-      item.style.display = "block";
-      draggedComp = null;
-    }, 0);
-  });
-
-  item.addEventListener("dragover", (e) => e.preventDefault());
-
-  item.addEventListener("drop", () => {
-    if (draggedComp && draggedComp !== item) {
-      compList.insertBefore(draggedComp, item.nextSibling);
+    // --- helpers ---
+    function renderList(ul, items){
+      ul.innerHTML = '';
+      items.forEach(text => {
+        const li = document.createElement('li');
+        li.textContent = text;
+        li.draggable = true;
+        li.addEventListener('dragstart', () => { li.classList.add('dragging'); });
+        li.addEventListener('dragend', () => { li.classList.remove('dragging'); });
+        li.addEventListener('dragover', e => e.preventDefault());
+        li.addEventListener('drop', () => {
+          const dragging = ul.querySelector('.dragging');
+          if (dragging && dragging !== li) ul.insertBefore(dragging, li.nextSibling);
+        });
+        ul.appendChild(li);
+      });
     }
-  });
-}
+    function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]];} return arr; }
+    function checkOrder(ul, correct, out){
+      const current = Array.from(ul.children).map(li => li.textContent.trim());
+      const ok = current.every((t,i) => t === correct[i]);
+      out.textContent = ok ? '✅ Great job! That\'s the correct order!' : '❌ Not quite. Try again!';
+      out.style.color = ok ? '#78e08f' : '#ff7675';
+    }
 
-// Initialize
-resetComputer();
-</script>
-
-  <h2>🛠️ What's an Algorithm? (Let’s Learn with Mario!)</h2>
-<p>Before we build our own algorithm for Space Invader, here’s one for a game you might know: <strong>Mario!</strong></p>
-
-<div class="tip-box">
-  <strong>Example: Mario Game Flow</strong>
-  <pre style="white-space: pre-wrap; background-color: #111; padding: 16px; border-radius: 10px; font-family: 'Courier New', monospace;">
-1. Show the game world  
-2. Wait for key input  
-3. If ➡️ or ⬅️ is pressed → move Mario left/right  
-4. If ⬆️ is pressed → Mario jumps  
-5. Move enemies and background  
-6. Check for collisions with coins or Goombas  
-7. If Mario hits coin → increase score  
-8. If Mario hits Goomba → lose life
-  </pre>
-  <p style="margin-top: 10px;">These instructions help the game engine know what to do. That’s an <strong>algorithm</strong>!</p>
-</div>
-
-<h2>Write Your Own Algorithm!</h2>
-<h2>Now You Try: Space Invader Game Flow</h2>
-  <p>What are the main pieces of our game?</p>
-  <ul>
-    <li>The spaceship (player)</li>
-    <li>The bullets (fired with spacebar)</li>
-    <li>The enemies (that move and drop down)</li>
-    <li>The score (that increases when you hit an enemy)</li>
-  </ul>
-<p>Can you guess what instructions our Space Invader game needs?</p>
-<p>Use the box below to list out the steps you think are needed — from when the game starts, to what happens when a bullet hits an enemy.</p>
-<p>Type your step-by-step plan below. Use plain English like:</p>
-<ul>
-  <li>“When the game starts, show the screen”</li>
-  <li>“If I press the left arrow, move the spaceship left”</li>
-</ul>
-
-<textarea id="algorithm-box" rows="10" style="width: 100%; max-width: 600px; padding: 12px; font-family: 'Comic Sans MS', cursive; font-size: 1em; border-radius: 8px; border: none; margin-top: 10px;"></textarea>
-
-<div style="margin-top: 15px;">
-  <button onclick="saveAlgorithm()" style="padding: 10px 20px; font-size: 1em; margin-right: 10px;">Save as .txt</button>
-  <button onclick="clearAlgorithm()" style="padding: 10px 20px; font-size: 1em;">🗑️ Clear</button>
-</div>
-
-<script>
-function saveAlgorithm() {
-  const text = document.getElementById("algorithm-box").value;
-  const blob = new Blob([text], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "my_space_invader_algorithm.txt";
-  a.click();
-
-  URL.revokeObjectURL(url);
-}
-
-function clearAlgorithm() {
-  document.getElementById("algorithm-box").value = "";
-}
-</script>
-
-  <div class="nav">
-  <a href="lesson4.html">Go to Lesson 4: Let’s Start Coding!</a>
-</div>
-
+    // --- Save/Clear ---
+    document.getElementById('algo-save').addEventListener('click', () => {
+      const text = document.getElementById('algo').value;
+      const blob = new Blob([text], { type:'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='my_space_invader_algorithm.txt'; a.click();
+      URL.revokeObjectURL(url);
+    });
+    document.getElementById('algo-clear').addEventListener('click', () => {
+      document.getElementById('algo').value='';
+    });
+  </script>
 </body>
 </html>
+
 
