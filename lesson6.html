@@ -3,32 +3,234 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lesson 6 – Add Bullets</title>
+  <title>Lesson 6 – Add Bullets (Pygame)</title>
   <style>
-    :root{ --bg1:#070b16; --bg2:#0a0f1e; --ink:#e6f0ff; --accent:#00eaff; --panel:#0b1226; --edge:#152042 }
+    :root{ --bg1:#070b16; --bg2:#0a0f1e; --ink:#e6f0ff; --accent:#00eaff; --panel:#0b1226; --edge:#152042; --good:#86efac; --warn:#ffd369 }
     *{box-sizing:border-box}
     body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:var(--ink); background:linear-gradient(to bottom,var(--bg1),var(--bg2));}
     .wrap{max-width:980px; margin:auto; padding:24px}
     h1{margin:0 0 8px; font-size:clamp(26px,3.2vw,42px); color:var(--accent); text-align:center}
+    h2{margin:12px 0}
     .card{background:var(--panel); border:1px solid var(--edge); border-radius:14px; padding:16px; margin:0 0 16px}
     .tip{background:#0e1730; border:1px solid #22356f; border-left:6px solid var(--accent); border-radius:10px; padding:12px 14px; margin:16px 0}
-    .hud{display:flex; justify-content:space-between; align-items:center; gap:12px; margin:8px 0}
-    .btn{appearance:none; border:1px solid #1a2b59; background:#0b1226; color:var(--ink); padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:700}
-    .btn:hover{filter:brightness(1.15)}
-    canvas{display:block; width:100%; height:auto; border:1px solid #16234a; border-radius:10px}
+    pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
     .nav{display:flex; justify-content:space-between; gap:12px}
-    a.btn{display:inline-block; text-decoration:none}
+    .btn{appearance:none; border:1px solid #1a2b59; background:#0b1226; color:var(--ink); padding:10px 16px; border-radius:10px; cursor:pointer; font-weight:700; text-decoration:none}
+    .btn:hover{filter:brightness(1.15)}
+    .box{background:#0b1226; border:1px dashed #234; border-radius:10px; padding:10px; margin:12px 0}
+    .list{line-height:1.6}
   </style>
 </head>
 <body>
   <main class="wrap">
     <section class="card">
-      <h1>Lesson 6: Add Bullets</h1>
-      <p>Make your spaceship fire tiny rectangles (bullets) upward when you press <strong>Space</strong>. This page includes a minimal player and game loop so you can test right away.</p>
-      <div class="tip"><strong>Goal:</strong> Press <strong>Space</strong> to shoot; bullets move up and disappear off-screen. We also add a small cooldown so holding Space is not a laser.
-      <br><strong>Controls:</strong> ←/→ to move, Space to shoot.</div>
-      <div class="hud"><button id="reset" class="btn">Reset</button></div>
-      <canvas id="game" width="720" height="480" aria-label="Game canvas"></canvas>
+      <h1>Lesson 6: Add Bullets (Pygame)</h1>
+      <p>In this lesson you will <strong>code</strong> bullets in Python with Pygame. When the player presses <kbd>Space</kbd>, a bullet appears at the tip of the ship and travels upward. No enemies yet — just firing and cleanup.</p>
+      <div class="tip"><strong>What you’ll learn:</strong> variables, lists, key events, timing (cooldown), updating position, drawing rectangles.</div>
+    </section>
+
+    <section class="card">
+      <h2>Step 0 — Start from Lesson 5</h2>
+      <p>Open the file you built in Lesson 5 (window + left/right movement). Keep your <code>while running:</code> game loop.</p>
+    </section>
+
+    <section class="card">
+      <h2>Step 1 — Add bullet state (top of your file)</h2>
+      <p>Put these <strong>just under</strong> your player variables so they’re easy to find:</p>
+      <pre><code># === BULLETS ===
+bullets = []                 # list of bullet dictionaries
+BULLET_W, BULLET_H = 4, 10   # size in pixels
+BULLET_SPEED = -6            # negative = up
+FIRE_COOLDOWN_MS = 250       # about 4 shots per second
+last_shot_at = 0             # time of last shot (ms)
+</code></pre>
+      <div class="box"><em>Why a list?</em> We may have many bullets on the screen at once. A Python list lets us store all of them and update each one every frame.</div>
+    </section>
+
+    <section class="card">
+      <h2>Step 2 — Write a helper to spawn a bullet</h2>
+      <p>Add this function <strong>above</strong> your game loop. It uses the player’s position to place the bullet at the ship’s nose and enforces a cooldown so holding Space isn’t a laser.</p>
+      <pre><code>import pygame  # (already at the top of your file)
+
+# ... keep your other setup code ...
+
+def fire_bullet(now_ms, player_x, player_y, player_w):
+    """Create one bullet if cooldown passed."""
+    global last_shot_at, bullets
+    if now_ms - last_shot_at &lt; FIRE_COOLDOWN_MS:
+        return  # too soon, wait a bit
+    # center bullet at the top of the ship
+    bx = player_x + player_w // 2 - BULLET_W // 2
+    by = player_y - BULLET_H
+    bullets.append({"x": bx, "y": by, "vy": BULLET_SPEED})
+    last_shot_at = now_ms
+</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Step 3 — Update bullets every frame</h2>
+      <p>Add these functions to keep your code tidy:</p>
+      <pre><code>def update_bullets():
+    """Move bullets and remove the ones that go off-screen."""
+    global bullets
+    for b in bullets:
+        b["y"] += b["vy"]
+    # keep bullets whose bottom is still visible
+    bullets = [b for b in bullets if b["y"] + BULLET_H &gt; 0]
+
+def draw_bullets(screen):
+    BULLET_COLOR = (255, 211, 105)  # soft yellow
+    for b in bullets:
+        pygame.draw.rect(screen, BULLET_COLOR, pygame.Rect(b["x"], b["y"], BULLET_W, BULLET_H))
+</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Step 4 — Hook bullets into your game loop</h2>
+      <ol class="list">
+        <li>When the player presses <kbd>Space</kbd>, call <code>fire_bullet(...)</code>.</li>
+        <li>Each frame, call <code>update_bullets()</code> before drawing.</li>
+        <li>When drawing, call <code>draw_bullets(screen)</code> after you draw the background and player.</li>
+      </ol>
+      <p><strong>Inside your event loop</strong> (where you already handle ←/→):</p>
+      <pre><code>for event in pygame.event.get():
+    if event.type == pygame.QUIT:
+        running = False
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_LEFT:
+            player_speed = -4
+        if event.key == pygame.K_RIGHT:
+            player_speed = 4
+        if event.key == pygame.K_SPACE:
+            now = pygame.time.get_ticks()
+            fire_bullet(now, player_x, player_y, player_w)
+    if event.type == pygame.KEYUP:
+        if event.key in (pygame.K_LEFT, pygame.K_RIGHT):
+            player_speed = 0
+</code></pre>
+      <p><strong>Each frame</strong> (in your main loop, after moving the player):</p>
+      <pre><code>update_bullets()
+</code></pre>
+      <p><strong>When drawing</strong> (after filling the background and drawing the player):</p>
+      <pre><code>draw_bullets(screen)
+</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Step 5 — Simple player shape (if you don’t have an image)</h2>
+      <p>If you didn’t load <code>player.png</code> in Lesson 4, you can draw a simple rectangle ship and set these sizes so bullets spawn from the center:</p>
+      <pre><code># player size &amp; position
+player_w, player_h = 40, 20
+player_x = 800 // 2 - player_w // 2
+player_y = 600 - 60
+
+# draw the player (rectangle + tiny cockpit)
+PLAYER_COLOR = (154, 180, 255)
+pygame.draw.rect(screen, PLAYER_COLOR, pygame.Rect(player_x, player_y, player_w, player_h))
+</code></pre>
+      <div class="box">If you <em>do</em> have a sprite: use <code>player_w = player_img.get_width()</code> and draw with <code>screen.blit(player_img, (player_x, player_y))</code>.</div>
+    </section>
+
+    <section class="card">
+      <h2>Full example after Lesson 6</h2>
+      <p>Here is a small, complete script you can run to test bullets. It uses a rectangle for the ship (no image needed).</p>
+      <pre><code>import sys, pygame
+pygame.init()
+screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption("Space Invader — Lesson 6")
+clock = pygame.time.Clock()
+
+# colors
+SPACE = (10, 15, 30)
+PLAYER_COLOR = (154, 180, 255)
+BULLET_COLOR = (255, 211, 105)
+
+# player
+player_w, player_h = 40, 20
+player_x = 800 // 2 - player_w // 2
+player_y = 600 - 60
+player_speed = 0  # -4, 0, or +4
+
+# bullets
+bullets = []
+BULLET_W, BULLET_H = 4, 10
+BULLET_SPEED = -6
+FIRE_COOLDOWN_MS = 250
+last_shot_at = 0
+
+def fire_bullet(now_ms, player_x, player_y, player_w):
+    global last_shot_at, bullets
+    if now_ms - last_shot_at &lt; FIRE_COOLDOWN_MS:
+        return
+    bx = player_x + player_w // 2 - BULLET_W // 2
+    by = player_y - BULLET_H
+    bullets.append({"x": bx, "y": by, "vy": BULLET_SPEED})
+    last_shot_at = now_ms
+
+def update_bullets():
+    global bullets
+    for b in bullets:
+        b["y"] += b["vy"]
+    bullets = [b for b in bullets if b["y"] + BULLET_H &gt; 0]
+
+def draw_bullets():
+    for b in bullets:
+        pygame.draw.rect(screen, BULLET_COLOR, pygame.Rect(b["x"], b["y"], BULLET_W, BULLET_H))
+
+running = True
+while running:
+    now = pygame.time.get_ticks()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                player_speed = -4
+            if event.key == pygame.K_RIGHT:
+                player_speed = 4
+            if event.key == pygame.K_SPACE:
+                fire_bullet(now, player_x, player_y, player_w)
+        if event.type == pygame.KEYUP:
+            if event.key in (pygame.K_LEFT, pygame.K_RIGHT):
+                player_speed = 0
+
+    # move player + clamp to screen
+    player_x += player_speed
+    pad = 10
+    if player_x &lt; pad:
+        player_x = pad
+    if player_x + player_w &gt; 800 - pad:
+        player_x = 800 - pad - player_w
+
+    # update bullets
+    update_bullets()
+
+    # draw
+    screen.fill(SPACE)
+    pygame.draw.rect(screen, PLAYER_COLOR, pygame.Rect(player_x, player_y, player_w, player_h))
+    # tiny cockpit
+    pygame.draw.polygon(screen, (207,225,255), [
+        (player_x + player_w // 2, player_y - 6),
+        (player_x + player_w // 2 - 6, player_y),
+        (player_x + player_w // 2 + 6, player_y)
+    ])
+    draw_bullets()
+
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
+sys.exit()
+</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Mini‑challenges</h2>
+      <ul class="list">
+        <li><strong>Faster or slower?</strong> Try different values for <code>BULLET_SPEED</code>.</li>
+        <li><strong>Single‑shot mode:</strong> Only fire when <kbd>Space</kbd> is first pressed (remove the cooldown &amp; call <code>fire_bullet</code> only on <code>KEYDOWN</code>).</li>
+        <li><strong>Two‑barrel ship:</strong> Spawn <em>two</em> bullets a few pixels left/right of center.</li>
+      </ul>
     </section>
 
     <section class="card nav">
@@ -36,41 +238,21 @@
       <a class="btn" href="lesson7.html">Continue to Lesson 7 →</a>
     </section>
   </main>
-
-  <script>
-  "use strict";
-  const canvas = document.getElementById('game');
-  const ctx = canvas.getContext('2d');
-  const resetBtn = document.getElementById('reset');
-
-  let running = true, lastTime = 0;
-
-  // --- Player (from Lessons 4–5) ---
-  const player = { x: canvas.width/2 - 20, y: canvas.height - 60, w: 40, h: 20, speed: 4 };
-  const input = { left:false, right:false, fire:false };
-  addEventListener('keydown', e=>{ if(e.code==='ArrowLeft')input.left=true; if(e.code==='ArrowRight')input.right=true; if(e.code==='Space'){input.fire=true; e.preventDefault();}});
-  addEventListener('keyup',   e=>{ if(e.code==='ArrowLeft')input.left=false; if(e.code==='ArrowRight')input.right=false; if(e.code==='Space'){input.fire=false; e.preventDefault();}});
-  function updatePlayer(){ if(input.left) player.x-=player.speed; if(input.right) player.x+=player.speed; const pad=10; if(player.x<pad)player.x=pad; if(player.x+player.w>canvas.width-pad)player.x=canvas.width-pad-player.w; }
-  function drawPlayer(){ ctx.save(); ctx.fillStyle='#9ab4ff'; ctx.fillRect(player.x,player.y,player.w,player.h); ctx.fillStyle='#cfe1ff'; ctx.beginPath(); ctx.moveTo(player.x+player.w/2, player.y-6); ctx.lineTo(player.x+player.w/2-6, player.y); ctx.lineTo(player.x+player.w/2+6, player.y); ctx.closePath(); ctx.fill(); ctx.restore(); }
-
-  // --- Bullets (new) ---
-  let bullets=[]; const BULLET_SPEED=-6, BULLET_W=4, BULLET_H=10, FIRE_COOLDOWN_MS=250; let lastShotAt=0;
-  function tryFireBullet(now){ if(!input.fire) return; if(now-lastShotAt<FIRE_COOLDOWN_MS) return; const bx=player.x+player.w/2-BULLET_W/2, by=player.y-BULLET_H; bullets.push({x:bx,y:by,w:BULLET_W,h:BULLET_H,vy:BULLET_SPEED,active:true}); lastShotAt=now; }
-  function updateBullets(){ for(const b of bullets){ if(!b.active) continue; b.y+=b.vy; if(b.y+b.h<0) b.active=false; } bullets=bullets.filter(b=>b.active); }
-  function drawBullets(){ ctx.save(); ctx.fillStyle=(Math.floor(performance.now()/120)%2===0)?'#ffd369':'#ffe39a'; for(const b of bullets){ if(b.active) ctx.fillRect(b.x,b.y,b.w,b.h); } ctx.restore(); }
-
-  // --- Loop ---
-  function drawBG(){ ctx.fillStyle='#0a0f1e'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.save(); ctx.globalAlpha=.4; ctx.fillStyle='#cfe1ff'; for(let i=0;i<60;i++){ const x=(i*97+Math.floor(performance.now()/10))%canvas.width; const y=(i*53+i*7)%canvas.height; ctx.fillRect(x,y,1,1);} ctx.restore(); }
-  function update(now){ updatePlayer(); tryFireBullet(now); updateBullets(); }
-  function draw(){ drawBG(); drawPlayer(); drawBullets(); }
-  function loop(now){ if(!running) return; lastTime=now; update(now); draw(); requestAnimationFrame(loop); }
-
-  function reset(){ player.x=canvas.width/2-player.w/2; player.y=canvas.height-60; bullets=[]; lastShotAt=0; if(!running){ running=true; requestAnimationFrame(loop);} }
-  resetBtn.addEventListener('click', reset);
-  reset(); requestAnimationFrame(loop);
-  </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
