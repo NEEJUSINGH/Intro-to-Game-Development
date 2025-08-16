@@ -3,354 +3,79 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lesson 6–7: Space Invaders (Bullets + Enemies)</title>
+  <title>Lesson 6 – Add Bullets</title>
   <style>
-    /* --- Simple, student-friendly styling --- */
-    :root{
-      --bg:#070b16;      /* deep space */
-      --panel:#0e1730;   /* card panel */
-      --ink:#d1e7ff;     /* text */
-      --glow:#7bd3ff;    /* enemy */
-      --laser:#ffd369;   /* bullet */
-      --accent:#86efac;  /* success */
-    }
+    :root{ --bg1:#070b16; --bg2:#0a0f1e; --ink:#e6f0ff; --accent:#00eaff; --panel:#0b1226; --edge:#152042 }
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; background:var(--bg); color:var(--ink);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      display:flex; align-items:flex-start; justify-content:center; padding:16px;
-    }
-    .wrap{width:min(920px, 100%);}
-    h1{margin:0 0 8px; font-size:20px; letter-spacing:.3px}
-    .card{
-      background:var(--panel); border:1px solid #152042; border-radius:12px;
-      padding:12px; box-shadow: 0 10px 30px rgba(0,0,0,.25);
-    }
-    .row{display:flex; gap:12px; flex-wrap:wrap}
-    .col{flex:1 1 320px}
-    #hud{display:flex; justify-content:space-between; align-items:center; margin:8px 0 0}
-    #hud .pill{background:#0b1226; border:1px solid #1a2b59; padding:6px 10px; border-radius:999px}
-    #status{min-height:1.2em}
-    canvas{display:block; width:100%; height:auto; border-radius:10px; border:1px solid #16234a}
-    details{background:#0b1226; border:1px solid #1a2b59; border-radius:10px; padding:10px}
-    summary{cursor:pointer; font-weight:600}
-    .kbd{display:inline-block; border:1px solid #3b4b7a; border-bottom-width:3px; border-radius:6px; padding:0 6px; font-weight:700}
-    .btn{
-      appearance:none; border:1px solid #2b3d78; background:#0b1226; color:var(--ink);
-      padding:8px 12px; border-radius:999px; cursor:pointer; font-weight:600
-    }
-    .btn:hover{filter:brightness(1.2)}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:var(--ink); background:linear-gradient(to bottom,var(--bg1),var(--bg2));}
+    .wrap{max-width:980px; margin:auto; padding:24px}
+    h1{margin:0 0 8px; font-size:clamp(26px,3.2vw,42px); color:var(--accent); text-align:center}
+    .card{background:var(--panel); border:1px solid var(--edge); border-radius:14px; padding:16px; margin:0 0 16px}
+    .tip{background:#0e1730; border:1px solid #22356f; border-left:6px solid var(--accent); border-radius:10px; padding:12px 14px; margin:16px 0}
+    .hud{display:flex; justify-content:space-between; align-items:center; gap:12px; margin:8px 0}
+    .btn{appearance:none; border:1px solid #1a2b59; background:#0b1226; color:var(--ink); padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:700}
+    .btn:hover{filter:brightness(1.15)}
+    canvas{display:block; width:100%; height:auto; border:1px solid #16234a; border-radius:10px}
+    .nav{display:flex; justify-content:space-between; gap:12px}
+    a.btn{display:inline-block; text-decoration:none}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="row">
-      <div class="col card">
-        <h1>Space Invaders — Lesson 6–7 (Bullets + Enemies)</h1>
-        <div id="hud">
-          <div class="pill">Score: <span id="score">0</span></div>
-          <div id="status"></div>
-          <div class="pill"><button id="reset" class="btn">Reset</button></div>
-        </div>
-        <canvas id="game" width="720" height="480" aria-label="Game canvas"></canvas>
-      </div>
-      <div class="col card">
-        <details open>
-          <summary>Read me (Beginner-friendly)</summary>
-          <div style="margin-top:8px; line-height:1.6">
-            <p><strong>Goal:</strong> Make a tiny game where your ship moves, shoots bullets, and defeats a grid of enemies.</p>
-            <p><strong>Controls:</strong> <span class="kbd">←</span> and <span class="kbd">→</span> to move, <span class="kbd">Space</span> to shoot. Click <em>Reset</em> to restart.</p>
-            <p>This file is a single page with HTML + CSS + JavaScript. The code is heavily commented so a beginner can read line by line.</p>
-            <ul>
-              <li><strong>Lesson 4:</strong> Game window + player movement</li>
-              <li><strong>Lesson 5:</strong> Organize code + game loop</li>
-              <li><strong>Lesson 6:</strong> Fire bullets</li>
-              <li><strong>Lesson 7:</strong> Add enemies + win check</li>
-            </ul>
-          </div>
-        </details>
-      </div>
-    </div>
-  </div>
+  <main class="wrap">
+    <section class="card">
+      <h1>Lesson 6: Add Bullets</h1>
+      <p>Make your spaceship fire tiny rectangles (bullets) upward when you press <strong>Space</strong>. This page includes a minimal player and game loop so you can test right away.</p>
+      <div class="tip"><strong>Goal:</strong> Press <strong>Space</strong> to shoot; bullets move up and disappear off-screen. We also add a small cooldown so holding Space is not a laser.
+      <br><strong>Controls:</strong> ←/→ to move, Space to shoot.</div>
+      <div class="hud"><button id="reset" class="btn">Reset</button></div>
+      <canvas id="game" width="720" height="480" aria-label="Game canvas"></canvas>
+    </section>
+
+    <section class="card nav">
+      <a class="btn" href="lesson5.html">← Back to Lesson 5</a>
+      <a class="btn" href="lesson7.html">Continue to Lesson 7 →</a>
+    </section>
+  </main>
 
   <script>
   "use strict";
-  // ============================
-  // 0) BASIC SETUP
-  // ============================
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
-  const scoreEl = document.getElementById('score');
-  const statusEl = document.getElementById('status');
   const resetBtn = document.getElementById('reset');
 
-  // Helpful timing for our loop
-  let lastTime = 0;
-  let running = true;
+  let running = true, lastTime = 0;
 
-  // ============================
-  // 1) PLAYER (Lesson 4)
-  // ============================
-  const player = {
-    // Start near bottom center
-    x: canvas.width/2 - 20,
-    y: canvas.height - 60,
-    w: 40,
-    h: 20,
-    speed: 4,
-  };
-  // Input flags: true while key is held
+  // --- Player (from Lessons 4–5) ---
+  const player = { x: canvas.width/2 - 20, y: canvas.height - 60, w: 40, h: 20, speed: 4 };
   const input = { left:false, right:false, fire:false };
+  addEventListener('keydown', e=>{ if(e.code==='ArrowLeft')input.left=true; if(e.code==='ArrowRight')input.right=true; if(e.code==='Space'){input.fire=true; e.preventDefault();}});
+  addEventListener('keyup',   e=>{ if(e.code==='ArrowLeft')input.left=false; if(e.code==='ArrowRight')input.right=false; if(e.code==='Space'){input.fire=false; e.preventDefault();}});
+  function updatePlayer(){ if(input.left) player.x-=player.speed; if(input.right) player.x+=player.speed; const pad=10; if(player.x<pad)player.x=pad; if(player.x+player.w>canvas.width-pad)player.x=canvas.width-pad-player.w; }
+  function drawPlayer(){ ctx.save(); ctx.fillStyle='#9ab4ff'; ctx.fillRect(player.x,player.y,player.w,player.h); ctx.fillStyle='#cfe1ff'; ctx.beginPath(); ctx.moveTo(player.x+player.w/2, player.y-6); ctx.lineTo(player.x+player.w/2-6, player.y); ctx.lineTo(player.x+player.w/2+6, player.y); ctx.closePath(); ctx.fill(); ctx.restore(); }
 
-  // Key listeners (beginner-friendly)
-  window.addEventListener('keydown', (e) => {
-    if (e.code === 'ArrowLeft') input.left = true;
-    if (e.code === 'ArrowRight') input.right = true;
-    if (e.code === 'Space') { input.fire = true; e.preventDefault(); }
-  });
-  window.addEventListener('keyup', (e) => {
-    if (e.code === 'ArrowLeft') input.left = false;
-    if (e.code === 'ArrowRight') input.right = false;
-    if (e.code === 'Space') { input.fire = false; e.preventDefault(); }
-  });
+  // --- Bullets (new) ---
+  let bullets=[]; const BULLET_SPEED=-6, BULLET_W=4, BULLET_H=10, FIRE_COOLDOWN_MS=250; let lastShotAt=0;
+  function tryFireBullet(now){ if(!input.fire) return; if(now-lastShotAt<FIRE_COOLDOWN_MS) return; const bx=player.x+player.w/2-BULLET_W/2, by=player.y-BULLET_H; bullets.push({x:bx,y:by,w:BULLET_W,h:BULLET_H,vy:BULLET_SPEED,active:true}); lastShotAt=now; }
+  function updateBullets(){ for(const b of bullets){ if(!b.active) continue; b.y+=b.vy; if(b.y+b.h<0) b.active=false; } bullets=bullets.filter(b=>b.active); }
+  function drawBullets(){ ctx.save(); ctx.fillStyle=(Math.floor(performance.now()/120)%2===0)?'#ffd369':'#ffe39a'; for(const b of bullets){ if(b.active) ctx.fillRect(b.x,b.y,b.w,b.h); } ctx.restore(); }
 
-  function updatePlayer(){
-    if (input.left)  player.x -= player.speed;
-    if (input.right) player.x += player.speed;
-    // Keep the ship inside the screen
-    if (player.x < 10) player.x = 10;
-    if (player.x + player.w > canvas.width - 10) player.x = canvas.width - 10 - player.w;
-  }
-  function drawPlayer(){
-    ctx.save();
-    ctx.fillStyle = '#9ab4ff';
-    ctx.fillRect(player.x, player.y, player.w, player.h);
-    // a small "cockpit" triangle for fun
-    ctx.fillStyle = '#cfe1ff';
-    ctx.beginPath();
-    ctx.moveTo(player.x + player.w/2, player.y - 6);
-    ctx.lineTo(player.x + player.w/2 - 6, player.y);
-    ctx.lineTo(player.x + player.w/2 + 6, player.y);
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
-  }
+  // --- Loop ---
+  function drawBG(){ ctx.fillStyle='#0a0f1e'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.save(); ctx.globalAlpha=.4; ctx.fillStyle='#cfe1ff'; for(let i=0;i<60;i++){ const x=(i*97+Math.floor(performance.now()/10))%canvas.width; const y=(i*53+i*7)%canvas.height; ctx.fillRect(x,y,1,1);} ctx.restore(); }
+  function update(now){ updatePlayer(); tryFireBullet(now); updateBullets(); }
+  function draw(){ drawBG(); drawPlayer(); drawBullets(); }
+  function loop(now){ if(!running) return; lastTime=now; update(now); draw(); requestAnimationFrame(loop); }
 
-  // ============================
-  // 2) BULLETS (Lesson 6)
-  // ============================
-  let bullets = [];
-  const BULLET_SPEED = -6;     // Upwards (negative y)
-  const BULLET_W = 4;
-  const BULLET_H = 10;
-  const FIRE_COOLDOWN_MS = 250; // Limit to ~4 shots/second
-  let lastShotAt = 0;
-
-  function tryFireBullet(now){
-    // Fire only if space is held and cooldown passed
-    if (!input.fire) return;
-    if (now - lastShotAt < FIRE_COOLDOWN_MS) return;
-    const bx = player.x + player.w/2 - BULLET_W/2;
-    const by = player.y - BULLET_H; // from ship top
-    bullets.push({ x: bx, y: by, w: BULLET_W, h: BULLET_H, vy: BULLET_SPEED, active: true });
-    lastShotAt = now;
-  }
-
-  function updateBullets(){
-    for (const b of bullets){
-      if (!b.active) continue;
-      b.y += b.vy; // move up
-      if (b.y + b.h < 0) b.active = false; // off-screen
-    }
-    // Clean up inactive bullets
-    bullets = bullets.filter(b => b.active);
-  }
-  function drawBullets(){
-    ctx.save();
-    ctx.fillStyle = getLaserColor(); // tiny variation each frame
-    for (const b of bullets){
-      if (!b.active) continue;
-      ctx.fillRect(b.x, b.y, b.w, b.h);
-    }
-    ctx.restore();
-  }
-  function getLaserColor(){
-    // Subtle flicker between two bullet tones (just for fun)
-    return (Math.floor(performance.now()/100)%2===0) ? '#ffd369' : '#ffe39a';
-    }
-
-  // ============================
-  // 3) ENEMIES (Lesson 7)
-  // ============================
-  let enemies = [];
-  let enemyCols = 8;       // per row
-  let enemyRows = 3;       // number of rows
-  let enemySpacingX = 70;  // gap between enemies
-  let enemySpacingY = 50;
-  let enemyStartX = 80;    // left margin
-  let enemyStartY = 60;    // top margin
-  let enemyW = 36, enemyH = 20;
-  let enemyDX = 1.2;       // move speed horizontally
-  let enemyDropY = 18;     // how much they drop when turning
-
-  function createEnemyFormation(){
-    enemies = [];
-    for (let r = 0; r < enemyRows; r++){
-      for (let c = 0; c < enemyCols; c++){
-        enemies.push({
-          x: enemyStartX + c * enemySpacingX,
-          y: enemyStartY + r * enemySpacingY,
-          w: enemyW, h: enemyH,
-          alive: true,
-          points: (r === 0 ? 30 : r === 1 ? 20 : 10) // optional: top worth more
-        });
-      }
-    }
-  }
-
-  function updateEnemies(){
-    // Decide if formation needs to turn (any alive touching an edge next frame)
-    let hitLeft=false, hitRight=false;
-    for (const e of enemies){
-      if (!e.alive) continue;
-      const nextX = e.x + enemyDX;
-      if (nextX < 10) hitLeft = true;
-      if (nextX + e.w > canvas.width - 10) hitRight = true;
-    }
-    if (hitLeft || hitRight){
-      for (const e of enemies){
-        if (!e.alive) continue;
-        e.y += enemyDropY;
-      }
-      enemyDX = -enemyDX; // reverse direction
-    }
-    for (const e of enemies){
-      if (!e.alive) continue;
-      e.x += enemyDX;
-    }
-  }
-
-  function drawEnemies(){
-    ctx.save();
-    for (const e of enemies){
-      if (!e.alive) continue;
-      // soft glow rectangle + eyes
-      ctx.fillStyle = '#7bd3ff';
-      ctx.fillRect(e.x, e.y, e.w, e.h);
-      ctx.fillStyle = '#0b1226';
-      ctx.fillRect(e.x+6, e.y+6, 6, 6); // left eye
-      ctx.fillRect(e.x+e.w-12, e.y+6, 6, 6); // right eye
-    }
-    ctx.restore();
-  }
-
-  // ============================
-  // 4) COLLISION + SCORE + WIN
-  // ============================
-  let score = 0;
-  function rectsOverlap(a,b){
-    return (a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y);
-  }
-  function handleBulletEnemyCollisions(){
-    for (const e of enemies){
-      if (!e.alive) continue;
-      for (const b of bullets){
-        if (!b.active) continue;
-        if (rectsOverlap(b, e)){
-          e.alive = false; // remove enemy
-          b.active = false; // remove bullet
-          score += e.points || 10; // update score
-          scoreEl.textContent = score;
-          break; // this bullet is gone, move to next enemy
-        }
-      }
-    }
-    bullets = bullets.filter(b => b.active);
-  }
-  function checkWin(){
-    const anyAlive = enemies.some(e => e.alive);
-    if (!anyAlive){
-      statusEl.textContent = 'You win! Great job 🚀';
-      running = false; // stop the loop
-    }
-  }
-
-  // ============================
-  // 5) GAME LOOP (Lesson 5)
-  // ============================
-  function drawBackground(){
-    // Dark space + tiny stars
-    ctx.fillStyle = '#0a0f1e';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    // sprinkle stars
-    ctx.save();
-    ctx.globalAlpha = 0.4;
-    ctx.fillStyle = '#cfe1ff';
-    for (let i=0;i<60;i++){
-      const x = (i*97 + Math.floor(performance.now()/10)) % canvas.width;
-      const y = (i*53 + i*7) % canvas.height;
-      ctx.fillRect(x, y, 1, 1);
-    }
-    ctx.restore();
-  }
-
-  function update(now){
-    // Player
-    updatePlayer();
-    // Bullets
-    tryFireBullet(now);
-    updateBullets();
-    // Enemies
-    updateEnemies();
-    // Collisions & Win
-    handleBulletEnemyCollisions();
-    checkWin();
-  }
-
-  function draw(){
-    drawBackground();
-    drawPlayer();
-    drawBullets();
-    drawEnemies();
-  }
-
-  function loop(now){
-    if (!running) return; // stop when won
-    const dt = now - lastTime; // (not used here but useful later)
-    lastTime = now;
-    update(now);
-    draw();
-    requestAnimationFrame(loop);
-  }
-
-  // ============================
-  // 6) RESET / INIT
-  // ============================
-  function resetGame(){
-    // Reset core state
-    player.x = canvas.width/2 - player.w/2;
-    player.y = canvas.height - 60;
-    bullets = [];
-    score = 0; scoreEl.textContent = score;
-    statusEl.textContent = '';
-    enemyDX = 1.2;
-    createEnemyFormation();
-    if (!running){
-      running = true;
-      lastTime = performance.now();
-      requestAnimationFrame(loop);
-    }
-  }
-
-  resetBtn.addEventListener('click', resetGame);
-
-  // Start!
-  resetGame();
-  lastTime = performance.now();
-  requestAnimationFrame(loop);
-
+  function reset(){ player.x=canvas.width/2-player.w/2; player.y=canvas.height-60; bullets=[]; lastShotAt=0; if(!running){ running=true; requestAnimationFrame(loop);} }
+  resetBtn.addEventListener('click', reset);
+  reset(); requestAnimationFrame(loop);
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
 
