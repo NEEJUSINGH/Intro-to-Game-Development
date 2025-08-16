@@ -1,104 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Lesson 2 – Play and Set Up!</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lesson 2 – Play the Game & Set Up Tools</title>
   <style>
-    body {
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: linear-gradient(to bottom, #000428, #004e92);
-      color: white;
-      padding: 30px;
-      line-height: 1.6;
-    }
-    h1 {
-      text-align: center;
-      font-size: 3em;
-      color: #00eaff;
-    }
-    h2 {
-      color: #ffeb3b;
-      margin-top: 40px;
-    }
-    p, li {
-      font-size: 1.2em;
-    }
-    iframe {
-    width: 100%;
-    height: 600px;
-    border: none;
-    border-radius: 0;
-    margin-top: 20px;
-    box-shadow: none;
-  }
-    .tip-box {
-      background-color: #222;
-      border-left: 6px solid #00eaff;
-      padding: 12px 18px;
-      margin: 20px 0;
-      border-radius: 10px;
-    }
-    .nav {
-      text-align: center;
-      margin-top: 50px;
-    }
-    .nav a {
-      background-color: #00eaff;
-      color: #000;
-      text-decoration: none;
-      padding: 12px 24px;
-      font-size: 1.2em;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,255,255,0.6);
-      transition: background-color 0.3s;
-    }
-    .nav a:hover {
-      background-color: #00c2d3;
-    }
+    :root{ --bg1:#070b16; --bg2:#0a0f1e; --ink:#e6f0ff; --accent:#00eaff; }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:var(--ink); background:linear-gradient(to bottom,var(--bg1),var(--bg2));}
+    .wrap{max-width:980px; margin:auto; padding:24px}
+    h1{margin:0 0 8px; font-size:clamp(26px,3.2vw,42px); color:var(--accent); text-align:center}
+    .grid{display:grid; grid-template-columns:1fr; gap:16px}
+    .card{background:#0b1226; border:1px solid #152042; border-radius:14px; padding:16px}
+    .tip{background:#0e1730; border:1px solid #22356f; border-left:6px solid var(--accent); border-radius:10px; padding:12px 14px; margin:16px 0}
+    .btn{appearance:none; border:1px solid #1a2b59; background:#0b1226; color:var(--ink); padding:10px 16px; border-radius:10px; cursor:pointer; font-weight:700}
+    .btn:hover{filter:brightness(1.2)}
+    iframe{border:0; border-radius:12px; width:100%; height:620px}
+    code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   </style>
 </head>
 <body>
+  <main class="wrap">
+    <h1>Lesson 2: Play the Game & Set Up!</h1>
+    <section class="card">
+      <div class="tip"><strong>Mission:</strong> Try the game you will build and set up your computer for coding.</div>
+      <p><strong>Controls:</strong> Use the left/right arrow keys to move. Press <strong>Space</strong> to shoot.</p>
+      <!-- If you have a playable web build, point this to it. Otherwise, keep as a placeholder. -->
+      <iframe 
+        src="space-invader.html" 
+        width="100%" 
+        height="650px" 
+        frameborder="0"
+        allowfullscreen>
+      </iframe>
+    </section>
 
-  <h1>Lesson 2: Play the Game & Set Up!</h1>
+    <section class="card">
+      <h2>Install Python and Pygame</h2>
+      <ol>
+        <li>Download Python from <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads</a>.</li>
+        <li>During install, check <em>Add Python to PATH</em>.</li>
+        <li>Open Terminal (macOS) or Command Prompt (Windows).</li>
+        <li>Install Pygame:
+          <pre><code>pip install pygame</code></pre></li>
+      </ol>
+      <div class="tip">If you are using a school computer, ask your teacher if you need admin access.</div>
+    </section>
 
-  <div class="tip-box">
-    <strong>Mission:</strong> Try the game you'll soon build, and install the tools that will turn you into a game developer!
-  </div>
-
-  <h2>Try the Game Below!</h2>
-<p>Use the <strong>arrow keys</strong> to move your spaceship, and press <strong>spacebar</strong> to fire your new blue laser beam. Try to hit the enemy and watch your score go up!</p>
-
-<iframe 
-  src="space-invader.html" 
-  width="100%" 
-  height="650px" 
-  frameborder="0"
-  allowfullscreen>
-</iframe>
-
-
-  <h2>Install Python and Pygame</h2>
-  <p>Want to run this game on your own computer? Here’s how to set everything up:</p>
-
-  <ul>
-    <li>Download Python from <a href="https://www.python.org/downloads/" target="_blank">python.org/downloads</a></li>
-    <li>Make sure to check “Add Python to PATH” during installation</li>
-    <li>After install, open Terminal or Command Prompt</li>
-    <li>Type this command and press Enter:
-      <pre><code>pip install pygame</code></pre>
-    </li>
-  </ul>
-
-  <div class="tip-box">
-    🔧 <strong>Note:</strong> If you're using a school computer, you may need admin access or help from your teacher!
-  </div>
-
-  <h2>Coming Up in Lesson 3:</h2>
-  <p>We’ll think like game designers! Based on what you played, what parts do we need to build first? Can you guess how we’ll create movement, enemies, or lasers?</p>
-
-  <div class="nav">
-    <a href="lesson3.html">➡️ Go to Lesson 3</a>
-  </div>
-
+    <section class="card" style="text-align:center">
+      <a class="btn" href="lesson3.html">Go to Lesson 3 →</a>
+    </section>
+  </main>
 </body>
 </html>
+
