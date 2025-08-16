@@ -1,110 +1,62 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Lesson 4 – Set Up Your Game Window</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lesson 4 – Set Up Your Game Window (Pygame)</title>
   <style>
-    body {
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: linear-gradient(to bottom, #000428, #004e92);
-      color: white;
-      padding: 30px;
-      line-height: 1.6;
-    }
-    h1 {
-      text-align: center;
-      font-size: 3em;
-      color: #00eaff;
-    }
-    h2 {
-      color: #ffeb3b;
-      margin-top: 40px;
-    }
-    code, pre {
-      background: #111;
-      padding: 12px;
-      display: block;
-      border-radius: 8px;
-      font-size: 1em;
-      white-space: pre-wrap;
-    }
-    .term {
-      background: #222;
-      border-left: 4px solid #00eaff;
-      padding: 10px 16px;
-      margin: 16px 0;
-      border-radius: 6px;
-    }
-    .nav {
-      text-align: center;
-      margin-top: 50px;
-    }
-    .nav a {
-      background-color: #00eaff;
-      color: #000;
-      text-decoration: none;
-      padding: 12px 24px;
-      font-size: 1.2em;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,255,255,0.6);
-      transition: background-color 0.3s;
-    }
-    .nav a:hover {
-      background-color: #00c2d3;
-    }
+    :root{ --bg1:#070b16; --bg2:#0a0f1e; --ink:#e6f0ff; --accent:#00eaff; }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:var(--ink); background:linear-gradient(to bottom,var(--bg1),var(--bg2));}
+    .wrap{max-width:900px; margin:auto; padding:24px}
+    h1{margin:0 0 8px; font-size:clamp(26px,3.2vw,42px); color:var(--accent); text-align:center}
+    .card{background:#0b1226; border:1px solid #152042; border-radius:14px; padding:16px}
+    pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .tip{background:#0e1730; border:1px solid #22356f; border-left:6px solid var(--accent); border-radius:10px; padding:12px 14px; margin:16px 0}
+    .nav{display:flex; justify-content:center; margin:24px 0}
+    .btn{appearance:none; border:1px solid #1a2b59; background:#0b1226; color:var(--ink); padding:10px 16px; border-radius:10px; cursor:pointer; font-weight:700}
+    .btn:hover{filter:brightness(1.2)}
   </style>
 </head>
 <body>
+  <main class="wrap">
+    <section class="card">
+      <h1>🚀 Lesson 4: Set Up Your Game Window</h1>
+      <p>Let’s create a Pygame window and draw your player sprite.</p>
+      <h2>Step 1: Start Pygame & Create a Window</h2>
+      <pre><code>import pygame
 
-  <h1>🚀 Lesson 4: Set Up Your Game Window</h1>
-
-  <p>Let’s start building your own version of the Space Invader game using Python and Pygame!</p>
-
-  <h2>Step 1: Start Pygame and Create a Window</h2>
-  <p>This code sets up your game screen and gives it a title:</p>
-
-  <pre><code>import pygame
-
-# Initialize the game engine
 pygame.init()
-
-# Create the game window
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Space Invader")
 </code></pre>
-
-  <div class="term">
-    <strong>Quick Tips:</strong><br>
-    <code>pygame.init()</code> – starts the game engine<br>
-    <code>set_mode()</code> – sets the screen size<br>
-    <code>set_caption()</code> – names your game window
-  </div>
-
-  <h2>Step 2: Load Your Player (Spaceship)</h2>
-  <p>You’ll need to download and save <code>player.png</code> in the same folder. Then use this code:</p>
-
-  <pre><code># Load the player image
+      <div class="tip">
+        <strong>Quick Tips:</strong>
+        <ul>
+          <li><code>pygame.init()</code> starts the engine.</li>
+          <li><code>set_mode()</code> picks the size.</li>
+          <li><code>set_caption()</code> names your window.</li>
+        </ul>
+      </div>
+      <h2>Step 2: Load and Draw the Player</h2>
+      <pre><code># Save player.png in the same folder first
 player_img = pygame.image.load("player.png")
-player_x = 368
-player_y = 500
+player_x, player_y = 368, 500
 
-# Draw the player
 def draw_player(x, y):
     screen.blit(player_img, (x, y))
 </code></pre>
-
-  <div class="term">
-    <strong>blit()</strong> means: draw this image at a position on the screen!
-  </div>
-
-  <p>That’s it for now! In the next lesson, we’ll learn how to move the spaceship using arrow keys.</p>
-
-  <div class="nav">
-    <a href="lesson5.html">➡️ Go to Lesson 5: Move the Player</a>
-  </div>
-
+      <p>In the next lesson, you will move the player with the arrow keys.</p>
+      <div class="nav"><a class="btn" href="lesson5.html">Go to Lesson 5 →</a></div>
+    </section>
+  </main>
 </body>
 </html>
+
+
+
+
+
 
 
 
