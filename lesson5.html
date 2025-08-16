@@ -1,72 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Lesson 5 – Move the Spaceship</title>
   <style>
-    body {
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: linear-gradient(to bottom, #000428, #004e92);
-      color: white;
-      padding: 30px;
-      line-height: 1.6;
-    }
-    h1 {
-      text-align: center;
-      font-size: 3em;
-      color: #00eaff;
-    }
-    h2 {
-      color: #ffeb3b;
-      margin-top: 40px;
-    }
-    code, pre {
-      background: #111;
-      padding: 12px;
-      display: block;
-      border-radius: 8px;
-      font-size: 1em;
-      white-space: pre-wrap;
-    }
-    .term {
-      background: #222;
-      border-left: 4px solid #00eaff;
-      padding: 10px 16px;
-      margin: 16px 0;
-      border-radius: 6px;
-    }
-    .nav {
-      text-align: center;
-      margin-top: 50px;
-    }
-    .nav a {
-      background-color: #00eaff;
-      color: #000;
-      text-decoration: none;
-      padding: 12px 24px;
-      font-size: 1.2em;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,255,255,0.6);
-      transition: background-color 0.3s;
-    }
-    .nav a:hover {
-      background-color: #00c2d3;
-    }
+    :root{ --bg1:#070b16; --bg2:#0a0f1e; --ink:#e6f0ff; --accent:#00eaff; }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:var(--ink); background:linear-gradient(to bottom,var(--bg1),var(--bg2));}
+    .wrap{max-width:900px; margin:auto; padding:24px}
+    h1{margin:0 0 8px; font-size:clamp(26px,3.2vw,42px); color:var(--accent); text-align:center}
+    .card{background:#0b1226; border:1px solid #152042; border-radius:14px; padding:16px}
+    pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .tip{background:#0e1730; border:1px solid #22356f; border-left:6px solid var(--accent); border-radius:10px; padding:12px 14px; margin:16px 0}
+    .nav{display:flex; justify-content:center; margin:24px 0}
+    .btn{appearance:none; border:1px solid #1a2b59; background:#0b1226; color:var(--ink); padding:10px 16px; border-radius:10px; cursor:pointer; font-weight:700}
+    .btn:hover{filter:brightness(1.2)}
   </style>
 </head>
 <body>
+  <main class="wrap">
+    <section class="card">
+      <h1>Lesson 5: Move the Spaceship</h1>
+      <p>Use the left and right arrow keys to glide your ship across the screen.</p>
 
-  <h1>Lesson 5: Move the Spaceship</h1>
+      <h2>Step 1: Add Speed</h2>
+      <pre><code>player_speed = 0</code></pre>
 
-  <p>Now let’s make the spaceship move when you press the arrow keys!</p>
-
-  <h2>Step 1: Add Speed Control</h2>
-  <pre><code>player_speed = 0</code></pre>
-
-  <h2>Step 2: Handle Key Presses</h2>
-  <p>Update your game loop with this logic:</p>
-
-  <pre><code># Inside your game loop:
+      <h2>Step 2: Handle Key Presses</h2>
+      <pre><code># inside your game loop
 for event in pygame.event.get():
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_LEFT:
@@ -78,28 +40,25 @@ for event in pygame.event.get():
             player_speed = 0
 </code></pre>
 
-  <h2>Step 3: Move the Player</h2>
-  <pre><code># Update player position
-player_x += player_speed
+      <h2>Step 3: Move the Player (+ keep on screen)</h2>
+      <pre><code>player_x += player_speed
+player_x = max(0, min(player_x, 800 - player_img.get_width()))
 </code></pre>
 
-  <div class="term">
-    <strong>player_x</strong> changes every frame, making it move left or right!
-  </div>
+      <div class="tip"><strong>Debug tip:</strong> print key presses to the console with <code>print(event.key)</code>.</div>
 
-  <h2>What You Learned</h2>
-  <ul>
-    <li>How to use <code>pygame.KEYDOWN</code> and <code>KEYUP</code></li>
-    <li>How to make the player move using arrow keys</li>
-    <li>How to control speed with variables</li>
-  </ul>
-
-  <h2>Try This:</h2>
-  <p>Add <code>print()</code> statements to show what keys you are pressing. This is great for debugging!</p>
-
-  <div class="nav">
-    <a href="lesson6.html">➡️ Go to Lesson 6: Add Bullets!</a>
-  </div>
-
+      <div class="nav"><a class="btn" href="lesson6.html">Go to Lesson 6 – Add Bullets →</a></div>
+    </section>
+  </main>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
